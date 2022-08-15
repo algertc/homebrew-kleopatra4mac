@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/algertc/kleopatra4mac">
-    <img src="https://www.gpg4win.org/img/kleopatra_logo.png" alt="Logo" width="925" height="333">
+    <img src="https://raw.githubusercontent.com/algertc/kleopatra4mac/main/images/kleo2_revised.png" alt="Logo" width="925" height="333">
   </a>
 
   <p align="center">
