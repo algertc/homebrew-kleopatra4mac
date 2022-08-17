@@ -10,7 +10,7 @@ class Kleopatra < Formula
   keg_only "not linked to prevent conflicts with any gpgme or kde libs"
 
   bottle do
-    root_url "https://github.com/algertc/homebrew-kleopatra4mac/releases/download/latest/kleopatra-22.07.80.arm64_monterey.bottle.tar.gz"
+    root_url "https://github.com/algertc/homebrew-kleopatra4mac/releases/download/1"
     sha256 monterey:       "5a3a4892a6ba475bd7e759dc08b4537182964b0fe650545c383aba921ad12803"
     sha256 arm64_monterey: "b3a7b265427c680b16bf1dacc03ebf6b4c5c3a7d96d5fd13b067cc0b50946467"
   end
