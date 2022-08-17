@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/algertc/kleopatra4mac">
-    <img src="https://raw.githubusercontent.com/algertc/kleopatra4mac/main/images/kleo2_revised.png" alt="Logo" width="925" height="333">
+    <img src="https://raw.githubusercontent.com/algertc/kleopatra4mac/main/images/kleo2_revised.png" alt="Logo" width="8000" height="2500">
   </a>
 
   <p align="center">
