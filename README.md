@@ -61,7 +61,7 @@
 <strong>Features:
 * Integrated Notepad
 * Smartcards
-* Similified Certificate Management
+* Simplified Certificate Management
 * Contacts
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
