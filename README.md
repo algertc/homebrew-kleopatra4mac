@@ -92,9 +92,10 @@
   ```
 
 ## Installation
-* ### Precompiled Binaries (Recommended)
+* ### <strong>Precompiled Binaries (Recommended)</strong>
 
 1. Brew Install
+
    ```sh
    brew install algertc/kleopatra4win/kleopatra
    ```
