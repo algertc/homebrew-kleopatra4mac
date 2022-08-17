@@ -1,4 +1,5 @@
 
+
 <a name="readme-top"></a>
 
 
@@ -10,7 +11,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/algertc/kleopatra4mac">
-    <img src="https://github.com/algertc/homebrew-kleopatra4mac/blob/main/images/kleo2_revised.png" alt="Logo" width="1000" height="200">
+    <img src="https://github.com/algertc/homebrew-kleopatra4mac/raw/main/images/kleo2_revised.png" alt="Logo" width="1000" height="210">
   </a>
 
   <p align="center">
@@ -70,35 +71,86 @@
 
 <!-- GETTING STARTED -->
 ## Getting Started
-IN PROGRESS******
-SAMPLE TEXT PLACEHOLDER
+
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
+* [Homebrew](https://brew.sh/)
   ```sh
-  npm install npm@latest -g
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   ```
 
-### Installation
+* [GnuPG/GPG](https://www.gnupg.org/)
+  ```sh
+  brew install gnupg
+  ```
+  **Must run gpg at least once to generate configs
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+* [GnuPG Pinentry](https://www.gnupg.org/related_software/pinentry/index.html)
+  ```sh
+  brew install pinentry-mac
+  ```
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+## Installation
+* ### Precompiled Binaries (Recommended)
+
+1. Brew Install
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   brew install algertc/kleopatra4win/kleopatra
    ```
-3. Install NPM packages
+
+  * ### Build From Source (Advanced)
+2. Check the [Brew "Bottle" Documentation](https://docs.brew.sh/Bottles) for Full Explanation
+
+3.  To Rebuild From [*Kleopatra.rb*](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/kleopatra.rb)  in This Repo
+
+	   `` brew install --build-from-source``
+5.  If  You Decide to Make Changes, You Can Create Your Own New Bottle (**Please Consider Submitting  a  Pull Request!)**
+
+	Bottles are produced by installing a formula with `brew install --build-bottle <formula>` and then bottling it with `brew bottle <formula>`
+
+## After Installation
+
+1. Make Sure dbus is Running
    ```sh
-   npm install
+   brew services start dbus
    ```
-4. Enter your API in `config.js`
+2. Make Sure dbus is Running
+   ```sh
+   brew services start dbus
+   ```
+3. Select <strong>pinentry-mac</strong> as the Default Program
    ```js
-   const API_KEY = 'ENTER YOUR API';
+   echo "pinentry-program /opt/homebrew/bin/pinentry-mac" > ~/.gnupg/gpg-agent.conf
+   killall -9 gpg-agent
+   ```
+4. If You Need to Have Kleopatra First in Your PATH, Run:
+   ```sh
+   echo 'export PATH="/opt/homebrew/opt/kleopatra/bin:$PATH"' >> ~/.zshrc
+   ```
+    ***(Note: Command here is for zshell)***
+
+5. If You Want to Add This Application to the Launchpad, Run:
+   ```sh
+   cd /Applications && unzip /opt/homebrew/opt/kleopatra/app.zip
    ```
 
+6. Kleopatra is Keg-Only, Which Means it Was Not Symlinked Into /opt/homebrew to Prevent Conflicts With Any *GPGme* or *KDE* Libraries. If You Must Create a Symlink, Run:
+   ```sh
+   export LDFLAGS="-L/opt/homebrew/opt/kleopatra/lib"
+   export CPPFLAGS="-I/opt/homebrew/opt/kleopatra/include"
+   ```
+
+7. For compilers to find kleopatra, You May Need to Set:
+   ```sh
+   export LDFLAGS="-L/opt/homebrew/opt/kleopatra/lib"
+   export CPPFLAGS="-I/opt/homebrew/opt/kleopatra/include"
+   ```
+
+8. For pkg-config to Find Kleopatra, You May Need to Set:
+   ```sh
+   export PKG_CONFIG_PATH="/opt/homebrew/opt/kleopatra/lib/pkgconfig"
+   ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -109,7 +161,11 @@ _Below is an example of how you can instruct your audience on installing and set
 - [x] Dark mode
 - [x] Universal Font
 - [ ] Fix symlink spotlight search ranking
-- [ ] Beautify UI
+- [ ] Beautify/Modernize UI
+	- [ ] Mimic [Plasma Styling](https://kde.org/images/screenshots/kleopatra.png)
+	- [ ] Transparency
+- [ ] Fix Unintended Pagination ([Issue #1](https://github.com/algertc/homebrew-kleopatra4mac/issues/1))
+- [ ] Exclude Default Icon from KDE's "kiconthemes" and Point to:  [Modernized Application Icon](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/images/Icon.svg)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
