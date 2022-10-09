@@ -112,10 +112,6 @@
 
 ## After Installation
 
-1. Make Sure dbus is Running
-   ```sh
-   brew services start dbus
-   ```
 2. Make Sure dbus is Running
    ```sh
    brew services start dbus
