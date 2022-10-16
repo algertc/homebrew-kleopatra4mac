@@ -97,7 +97,7 @@
 1. Brew Install
 
    ```sh
-   brew install algertc/kleopatra4win/kleopatra
+   brew install algertc/kleopatra4mac/kleopatra
    ```
 
   * ### Build From Source (Advanced)
