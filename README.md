@@ -120,7 +120,7 @@
    ```sh
    echo "pinentry-program /usr/local/Cellar/pinentry-mac/1.1.1.1" > ~/.gnupg/gpg-agent.conf 
 killall -9 gpg-agent
-   ```	
+   ```
 3. If You Need to Have Kleopatra First in Your PATH, Run:
    ```sh
    echo 'export PATH="/usr/local/Cellar/kleopatra/22.07.80/bin:$PATH"' >> ~/.zshrc
