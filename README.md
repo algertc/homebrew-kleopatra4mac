@@ -119,7 +119,7 @@
 	
 3. Select <strong>pinentry-mac</strong> as the Default Program
    ```sh
-   echo "echo "pinentry-program /usr/local/Cellar/pinentry-mac/1.1.1.1" > ~/.gnupg/gpg-agent.conf
+   echo "pinentry-program /usr/local/Cellar/pinentry-mac/1.1.1.1" > ~/.gnupg/gpg-agent.conf
 killall -9 gpg-agent
    ```
 	
