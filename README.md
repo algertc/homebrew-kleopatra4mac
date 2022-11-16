@@ -118,8 +118,8 @@
    ```
 3. Select <strong>pinentry-mac</strong> as the Default Program
    ```js
-   echo "pinentry-program /opt/homebrew/bin/pinentry-mac" > ~/.gnupg/gpg-agent.conf
-   killall -9 gpg-agent
+   echo "echo "pinentry-program /usr/local/Cellar/pinentry-mac/1.1.1.1" > ~/.gnupg/gpg-agent.conf
+killall -9 gpg-agent
    ```
 4. If You Need to Have Kleopatra First in Your PATH, Run:
    ```sh
