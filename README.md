@@ -91,6 +91,8 @@
   brew install pinentry-mac
   ```
 
+	
+	
 ## Installation
 * ### <strong>Precompiled Binaries (Recommended)</strong>
 
@@ -101,45 +103,55 @@
    ```
 
   * ### Build From Source (Advanced)
+	
 2. Check the [Brew "Bottle" Documentation](https://docs.brew.sh/Bottles) for Full Explanation
 
 3.  To Rebuild From [*Kleopatra.rb*](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/kleopatra.rb)  in This Repo
 
 	   `` brew install --build-from-source``
+	
 4.  If  You Decide to Make Changes, You Can Create Your Own New Bottle (**Please Consider Submitting  a  Pull Request!)**
 
 	Bottles are produced by installing a formula with `brew install --build-bottle <formula>` and then bottling it with `brew bottle <formula>`
 
+	
+	
 ## After Installation
 
 1. Make Sure dbus is Running
    ```sh
    brew services start dbus
    ```	
+	
 2. Select <strong>pinentry-mac</strong> as the Default Program
-   ```{r tidy=FALSE}
-   echo "pinentry-program /usr/local/Cellar/pinentry-mac/1.1.1.1" > ~/.gnupg/gpg-agent.conf 
-killall -9 gpg-agent
    ```
+   echo "pinentry-program /usr/local/Cellar/pinentry-mac/1.1.1.1" > ~/.gnupg/gpg-agent.conf 
+   killall -9 gpg-agent
+   ```
+	
 3. If You Need to Have Kleopatra First in Your PATH, Run:
    ```sh
    echo 'export PATH="/usr/local/Cellar/kleopatra/22.07.80/bin:$PATH"' >> ~/.zshrc
    ```
     ***(Note: Command here is for zshell)***
+	
 4. If You Want to Add This Application to the Launchpad, Run:
    ```sh
    cd /Applications && unzip /usr/local/Cellar/kleopatra/22.07.80/bin/app.zip
    ```
+	
 5. Kleopatra is Keg-Only, Which Means it Was Not Symlinked Into /opt/homebrew to Prevent Conflicts With Any *GPGme* or *KDE* Libraries. If You Must Create a Symlink, Run:
    ```sh
    export LDFLAGS="-L/usr/local/Cellar/kleopatra/22.07.80/lib"
    export CPPFLAGS="-I/usr/local/Cellar/kleopatra/22.07.80/include"
    ```
+	
 6. For compilers to find kleopatra, You May Need to Set:
    ```sh
    export LDFLAGS="-L/usr/local/Cellar/kleopatra/22.07.80/lib"
    export CPPFLAGS="-I/usr/local/Cellar/kleopatra/22.07.80/include"
    ```
+	
 7. For pkg-config to Find Kleopatra, You May Need to Set:
    ```sh
    export PKG_CONFIG_PATH="/usr/local/Cellar/kleopatra/22.07.80/lib/pkgconfig"
