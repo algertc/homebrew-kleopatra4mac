@@ -111,10 +111,10 @@
 	Bottles are produced by installing a formula with `brew install --build-bottle <formula>` and then bottling it with `brew bottle <formula>`
 
 ## After Installation
-### NOTE: *The Following Section is For ARM/Apple Silicon.*  
-**Intel Instructions Can Be Found [Here](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/intel_instructions.md)**
-  
-  
+### NOTE: *The Following Section is For ARM/Apple Silicon.* 
+### Intel Instructions Can Be Found [Here](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/intel_instructions.md)
+<br />  
+
 1. Make Sure dbus is Running
    ```sh
    brew services start dbus
