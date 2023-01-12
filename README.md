@@ -106,45 +106,46 @@
 3.  To Rebuild From [*Kleopatra.rb*](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/kleopatra.rb)  in This Repo
 
 	   `` brew install --build-from-source``
-5.  If  You Decide to Make Changes, You Can Create Your Own New Bottle (**Please Consider Submitting  a  Pull Request!)**
+4.  If  You Decide to Make Changes, You Can Create Your Own New Bottle (**Please Consider Submitting  a  Pull Request!)**
 
 	Bottles are produced by installing a formula with `brew install --build-bottle <formula>` and then bottling it with `brew bottle <formula>`
 
 ## After Installation
+### ❗*The Following Section is For ARM/Apple Silicon. Intel Instructions Can Be Found [Here](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/intel_instructions.md)* 
 
-2. Make Sure dbus is Running
+1. Make Sure dbus is Running
    ```sh
    brew services start dbus
    ```
-3. Select <strong>pinentry-mac</strong> as the Default Program
+2. Select <strong>pinentry-mac</strong> as the Default Program
    ```js
    echo "pinentry-program /opt/homebrew/bin/pinentry-mac" > ~/.gnupg/gpg-agent.conf
    killall -9 gpg-agent
    ```
-4. If You Need to Have Kleopatra First in Your PATH, Run:
+3. If You Need to Have Kleopatra First in Your PATH, Run:
    ```sh
    echo 'export PATH="/opt/homebrew/opt/kleopatra/bin:$PATH"' >> ~/.zshrc
    ```
     ***(Note: Command here is for zshell)***
 
-5. If You Want to Add This Application to the Launchpad, Run:
+4. If You Want to Add This Application to the Launchpad, Run:
    ```sh
    cd /Applications && unzip /opt/homebrew/opt/kleopatra/app.zip
    ```
 
-6. Kleopatra is Keg-Only, Which Means it Was Not Symlinked Into /opt/homebrew to Prevent Conflicts With Any *GPGme* or *KDE* Libraries. If You Must Create a Symlink, Run:
+5. Kleopatra is Keg-Only, Which Means it Was Not Symlinked Into /opt/homebrew to Prevent Conflicts With Any *GPGme* or *KDE* Libraries. If You Must Create a Symlink, Run:
    ```sh
    export LDFLAGS="-L/opt/homebrew/opt/kleopatra/lib"
    export CPPFLAGS="-I/opt/homebrew/opt/kleopatra/include"
    ```
 
-7. For compilers to find kleopatra, You May Need to Set:
+6. For compilers to find kleopatra, You May Need to Set:
    ```sh
    export LDFLAGS="-L/opt/homebrew/opt/kleopatra/lib"
    export CPPFLAGS="-I/opt/homebrew/opt/kleopatra/include"
    ```
 
-8. For pkg-config to Find Kleopatra, You May Need to Set:
+7. For pkg-config to Find Kleopatra, You May Need to Set:
    ```sh
    export PKG_CONFIG_PATH="/opt/homebrew/opt/kleopatra/lib/pkgconfig"
    ```
