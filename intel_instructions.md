@@ -4,7 +4,7 @@
    ```sh
    brew services start dbus
    ```	
-   If you get an error similar to `Error: Formula 'dbus' has not implemented #plist, #service or installed a locatable service file`, run the following command instead:
+   If you encounter an error similar to `Error: Formula 'dbus' has not implemented #plist, #service or installed a locatable service file`, the following command may fix the issue:
    ```sh
    brew services start d-bus
    ```
