@@ -337,6 +337,8 @@ class Kleopatra < Formula
       s.gsub!(/QStringLiteral\(\"Monospace\"\)/, "QFontDatabase::systemFont(QFontDatabase::FixedFont)")
     end
 
+    modernize_ui
+
     system "cmake", ".", *args
 
     # ensure application is installed to the prefix in Cellar
@@ -355,6 +357,18 @@ class Kleopatra < Formula
 
     # this fixes loading of libdbus in runtime from qt on apple m1
     system "install_name_tool", "-add_rpath", "#{HOMEBREW_PREFIX}/lib", kleopatra
+  end
+
+  def modernize_ui
+    inreplace "src/main.cpp", "#include <QAccessible>", <<~CPP
+      #include <QAccessible>
+      #include <QStyleFactory>
+    CPP
+
+    inreplace "src/main.cpp", "KleopatraApplication app(argc, argv);", <<~CPP.chomp
+      KleopatraApplication app(argc, argv);
+      app.setStyle(QStyleFactory::create(QStringLiteral("Fusion")));
+    CPP
   end
 
   test do

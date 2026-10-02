@@ -1,0 +1,56 @@
+# typed: true
+# frozen_string_literal: true
+
+require "formula"
+require "minitest/autorun"
+require "tmpdir"
+
+SOURCE_DIRECTORY = Pathname(ARGV.shift || raise("Pass the extracted Kleopatra v22.07.80 source directory")).freeze
+
+class UiModernizationTest < Minitest::Test
+  def setup
+    @formula = Formulary.factory("kayyo321/kleopatra4mac/kleopatra")
+    @directory = Pathname(Dir.mktmpdir("kleopatra-ui-test"))
+    (@directory/"src").mkpath
+    FileUtils.cp SOURCE_DIRECTORY/"src/main.cpp", @directory/"src/main.cpp"
+  end
+
+  def teardown
+    FileUtils.rm_rf @directory
+  end
+
+  def test_upstream_patch_and_qt_runtime
+    Dir.chdir(@directory) { @formula.modernize_ui }
+    source = (@directory/"src/main.cpp").read
+    setup = source.match(/KleopatraApplication app\(argc, argv\);(.*?)KCrash::initialize\(\);/m)[1]
+    (@directory/"theme.cpp").write <<~CPP
+      #include <QApplication>
+      #include <QStyle>
+      #include <QStyleFactory>
+      int main(int argc, char **argv) {
+          QApplication app(argc, argv);
+          #{setup}
+          return app.style()->objectName() == QStringLiteral("fusion") ? 0 : 1;
+      }
+    CPP
+    Dir.chdir(@directory) do
+      raise "Qt compilation failed" unless system "/usr/bin/clang++", "-std=c++17", "-fPIC", "theme.cpp",
+                                                  "-I#{Utils::Path.formula_opt_lib("qt@5")}/QtWidgets.framework/Headers",
+                                                  "-I#{Utils::Path.formula_opt_lib("qt@5")}/QtGui.framework/Headers",
+                                                  "-I#{Utils::Path.formula_opt_lib("qt@5")}/QtCore.framework/Headers",
+                                                  "-F#{Utils::Path.formula_opt_lib("qt@5")}",
+                                                  "-framework", "QtWidgets",
+                                                  "-framework", "QtGui", "-framework", "QtCore", "-o", "theme"
+
+      assert system({ "QT_QPA_PLATFORM" => "offscreen" }, "./theme")
+    end
+  end
+
+  def test_missing_startup_anchor_fails
+    source = @directory/"src/main.cpp"
+    source.write source.read.sub("KleopatraApplication app(argc, argv);", "KleopatraApplication renamed(argc, argv);")
+    capture_io do
+      assert_raises(BuildError) { Dir.chdir(@directory) { @formula.modernize_ui } }
+    end
+  end
+end
