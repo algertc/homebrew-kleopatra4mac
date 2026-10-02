@@ -5,16 +5,16 @@
 **Repository Path:** `/opt/homebrew/Library/Taps/kayyo321/homebrew-kleopatra4mac`
 **Working Branch:** `feature/modernize-ui-plasma-transparency`
 **Tracker Initialized:** 2026-10-02 11:45:00-04:00
-**Last Updated:** 2026-10-02 11:57:38-04:00
+**Last Updated:** 2026-10-02 11:58:17-04:00
 
 ---
 
 ## Overall Implementation Progress
 
 ```
-[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 22.2% Complete
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 27.8% Complete
 ```
-**Current Status: 22.2% Implemented (4 of 18 sub-tasks completed)**
+**Current Status: 27.8% Implemented (5 of 18 sub-tasks completed)**
 
 ---
 
@@ -46,7 +46,7 @@
 | **F5** | **Breeze Palette** | Authentic KDE Breeze Dark `QPalette` (Charcoal `#232629`, Cyan `#3daee9`, Text `#eff0f1`) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:55:40-04:00 |
 | **F6** | **QSS Theming** | Menu bar, menus, items, separators, and status bar styling | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:55:57-04:00 |
 | **F7** | **QSS Theming** | Toolbar and tool button styling (padding, borders, hover/pressed state) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:57:38-04:00 |
-| **F8** | **QSS Theming** | Tree view & table view styling (`QTreeView`, `QTableView`, alternate rows, gridlines) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
+| **F8** | **QSS Theming** | Tree view & table view styling (`QTreeView`, `QTableView`, alternate rows, gridlines) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:58:17-04:00 |
 | **F9** | **QSS Theming** | Table header section styling (`QHeaderView::section` cyan bottom accent) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
 | **F10** | **QSS Theming** | Tab widget & tab bar styling (`QTabWidget`, `QTabBar`, active underline indicator) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
 | **F11** | **QSS Theming** | Action buttons (`QPushButton` default, hover, pressed, disabled states) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
@@ -99,6 +99,8 @@
 
 | 4 | 2026-10-02 11:57:38-04:00 | `f0b7795` | feat(ui) | style toolbars and action buttons | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F7 |
 
+| 5 | 2026-10-02 11:58:17-04:00 | `44d5b1e` | feat(ui) | theme certificate trees and tables | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F8 |
+
 ---
 
 ## Change Log & Notes
@@ -112,3 +114,5 @@
 - **2026-10-02 11:55:57-04:00**: 7e9bff9 completed F6. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
 
 - **2026-10-02 11:57:38-04:00**: f0b7795 completed F7. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 11:58:17-04:00**: 44d5b1e completed F8. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
