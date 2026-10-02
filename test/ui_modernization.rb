@@ -82,6 +82,9 @@ class UiModernizationTest < Minitest::Test
           auto button = new QPushButton(QStringLiteral("Disabled"), central);
           button->setEnabled(false);
           layout->addWidget(button);
+          auto action = new QPushButton(QStringLiteral("Export"), central);
+          action->setDefault(true);
+          layout->addWidget(action);
           window.setCentralWidget(central);
           window.resize(640, 480);
           window.show();
@@ -92,7 +95,10 @@ class UiModernizationTest < Minitest::Test
               app.processEvents();
               if (window.grab().isNull()) { return 3; }
           }
-          return 0;
+          action->setFocus();
+          action->setDown(true);
+          app.processEvents();
+          return window.grab().isNull() ? 4 : 0;
       }
     CPP
     Dir.chdir(@directory) do
