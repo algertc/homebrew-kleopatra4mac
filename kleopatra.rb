@@ -398,6 +398,37 @@ class Kleopatra < Formula
       breezeDark.setColor(QPalette::Disabled, QPalette::HighlightedText, QColor(122, 127, 131));
       app.setPalette(breezeDark);
 
+      app.setStyleSheet(QStringLiteral(R"QSS(
+          QMainWindow { background-color: #232629; }
+          QMenuBar {
+              background-color: #232629;
+              color: #eff0f1;
+              border-bottom: 1px solid #3a3f44;
+              padding: 2px;
+          }
+          QMenuBar::item { background: transparent; padding: 4px 8px; border-radius: 4px; }
+          QMenuBar::item:selected { background-color: #3daee9; color: #ffffff; }
+          QMenuBar::item:disabled { color: #7a7f83; }
+          QMenu {
+              background-color: #232629;
+              color: #eff0f1;
+              border: 1px solid #3a3f44;
+              border-radius: 6px;
+              padding: 4px;
+          }
+          QMenu::item { padding: 6px 24px 6px 12px; border-radius: 4px; }
+          QMenu::item:selected { background-color: #3daee9; color: #ffffff; }
+          QMenu::item:disabled { color: #7a7f83; }
+          QMenu::separator { height: 1px; background-color: #3a3f44; margin: 4px 8px; }
+          QStatusBar { background-color: #232629; color: #a5b0b7; border-top: 1px solid #3a3f44; }
+          QToolTip {
+              background-color: #232629;
+              color: #eff0f1;
+              border: 1px solid #3daee9;
+              padding: 5px 8px;
+              border-radius: 4px;
+          }
+      )QSS"));
     CPP
   end
 

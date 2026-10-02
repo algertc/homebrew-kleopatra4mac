@@ -4,6 +4,7 @@
 require "formula"
 require "minitest/autorun"
 require "tmpdir"
+require "open3"
 
 SOURCE_DIRECTORY = Pathname(ARGV.shift || raise("Pass the extracted Kleopatra v22.07.80 source directory")).freeze
 
@@ -29,6 +30,10 @@ class UiModernizationTest < Minitest::Test
       #include <QStyleFactory>
       #include <QPalette>
       #include <QColor>
+      #include <QMainWindow>
+      #include <QMenuBar>
+      #include <QMenu>
+      #include <QStatusBar>
       int main(int argc, char **argv) {
           QApplication app(argc, argv);
           #{setup}
@@ -37,7 +42,12 @@ class UiModernizationTest < Minitest::Test
               || app.palette().color(QPalette::Disabled, QPalette::Text) != QColor(122, 127, 131)) {
               return 2;
           }
-          return app.style()->objectName() == QStringLiteral("fusion") ? 0 : 1;
+          QMainWindow window;
+          window.menuBar()->addMenu(QStringLiteral("Test"))->addAction(QStringLiteral("Action"));
+          window.statusBar()->showMessage(QStringLiteral("Ready"));
+          window.resize(640, 480);
+          window.ensurePolished();
+          return window.grab().isNull() ? 3 : 0;
       }
     CPP
     Dir.chdir(@directory) do
@@ -49,7 +59,8 @@ class UiModernizationTest < Minitest::Test
                                                   "-framework", "QtWidgets",
                                                   "-framework", "QtGui", "-framework", "QtCore", "-o", "theme"
 
-      assert system({ "QT_QPA_PLATFORM" => "offscreen" }, "./theme")
+      _, errors, status = Open3.capture3({ "QT_QPA_PLATFORM" => "offscreen" }, "./theme")
+      assert status.success? && !errors.match?(/Could not parse|Unknown property/), errors
     end
   end
 
