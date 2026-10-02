@@ -460,6 +460,12 @@ class Kleopatra < Formula
               border-bottom: 2px solid #3daee9;
           }
           QTableCornerButton::section { background-color: #232629; border: 1px solid #3a3f44; }
+
+          QTabWidget::pane { border: 1px solid #3a3f44; background-color: rgba(35, 38, 41, 230); border-radius: 6px; top: -1px; }
+          QTabBar::tab { background-color: #232629; color: #a5b0b7; padding: 8px 18px; border: 1px solid #3a3f44; border-bottom: none; border-top-left-radius: 6px; border-top-right-radius: 6px; margin-right: 2px; }
+          QTabBar::tab:selected { background-color: rgba(35, 38, 41, 230); color: #3daee9; border-bottom: 2px solid #3daee9; font-weight: bold; }
+          QTabBar::tab:hover:!selected { background-color: #2a2e32; color: #eff0f1; }
+          QTabBar::tab:disabled { color: #7a7f83; }
       )QSS"));
     CPP
   end
