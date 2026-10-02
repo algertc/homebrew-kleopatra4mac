@@ -476,6 +476,10 @@ class Kleopatra < Formula
           QLineEdit { background-color: #1b1e20; color: #eff0f1; border: 1px solid #474d53; border-radius: 5px; padding: 6px 10px; selection-background-color: #3daee9; selection-color: #ffffff; }
           QLineEdit:focus { border-color: #3daee9; background-color: #232629; }
           QLineEdit:disabled { color: #7a7f83; }
+
+          QTextEdit, QPlainTextEdit { background-color: #1b1e20; color: #eff0f1; border: 1px solid #3a3f44; border-radius: 6px; padding: 8px; selection-background-color: #3daee9; selection-color: #ffffff; }
+          QTextEdit:focus, QPlainTextEdit:focus { border-color: #3daee9; }
+          QTextEdit:disabled, QPlainTextEdit:disabled { color: #7a7f83; }
       )QSS"));
     CPP
   end
