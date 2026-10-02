@@ -72,6 +72,11 @@ class UiModernizationTest < Minitest::Test
           tree->setCurrentItem(tree->topLevelItem(0));
           tabs->addTab(tree, QStringLiteral("Certificates"));
           tabs->addTab(new QTextEdit(QStringLiteral("Notepad sample"), tabs), QStringLiteral("Notepad"));
+          auto table = new QTableWidget(3, 2, tabs);
+          table->setHorizontalHeaderLabels({QStringLiteral("Status"), QStringLiteral("Fingerprint")});
+          table->setItem(0, 0, new QTableWidgetItem(QStringLiteral("Valid")));
+          table->selectRow(0);
+          tabs->addTab(table, QStringLiteral("Details"));
           layout->addWidget(new QLineEdit(QStringLiteral("Search"), central));
           layout->addWidget(tabs);
           auto button = new QPushButton(QStringLiteral("Disabled"), central);
@@ -82,10 +87,12 @@ class UiModernizationTest < Minitest::Test
           window.show();
           app.processEvents();
           window.ensurePolished();
-          if (window.grab().isNull()) { return 3; }
-          tabs->setCurrentIndex(1);
-          app.processEvents();
-          return window.grab().isNull() ? 4 : 0;
+          for (int index = 0; index < tabs->count(); ++index) {
+              tabs->setCurrentIndex(index);
+              app.processEvents();
+              if (window.grab().isNull()) { return 3; }
+          }
+          return 0;
       }
     CPP
     Dir.chdir(@directory) do

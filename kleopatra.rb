@@ -434,6 +434,21 @@ class Kleopatra < Formula
           QToolButton:hover { background-color: rgba(61, 174, 233, 46); border-color: #3daee9; }
           QToolButton:pressed, QToolButton:checked { background-color: rgba(61, 174, 233, 89); border-color: #3daee9; }
           QToolButton:disabled { background: transparent; color: #7a7f83; border-color: transparent; }
+
+          QTreeView, QTableView {
+              background-color: rgba(27, 30, 32, 209);
+              alternate-background-color: rgba(35, 38, 41, 209);
+              color: #eff0f1;
+              border: 1px solid #3a3f44;
+              border-radius: 6px;
+              gridline-color: #31363b;
+              selection-background-color: #3daee9;
+              selection-color: #ffffff;
+          }
+          QTreeView::item, QTableView::item { padding: 5px; }
+          QTreeView::item:hover:!selected, QTableView::item:hover:!selected { background-color: rgba(61, 174, 233, 38); }
+          QTreeView::item:selected, QTableView::item:selected { background-color: #2980b9; color: #ffffff; }
+          QTreeView:disabled, QTableView:disabled { color: #7a7f83; }
       )QSS"));
     CPP
   end
