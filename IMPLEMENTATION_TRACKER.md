@@ -5,16 +5,16 @@
 **Repository Path:** `/opt/homebrew/Library/Taps/kayyo321/homebrew-kleopatra4mac`
 **Working Branch:** `feature/modernize-ui-plasma-transparency`
 **Tracker Initialized:** 2026-10-02 11:45:00-04:00
-**Last Updated:** 2026-10-02 12:00:18-04:00
+**Last Updated:** 2026-10-02 12:00:42-04:00
 
 ---
 
 ## Overall Implementation Progress
 
 ```
-[█████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░] 50.0% Complete
+[████████████████████████████░░░░░░░░░░░░░░░░░░░░░░] 55.6% Complete
 ```
-**Current Status: 50.0% Implemented (9 of 18 sub-tasks completed)**
+**Current Status: 55.6% Implemented (10 of 18 sub-tasks completed)**
 
 ---
 
@@ -51,7 +51,7 @@
 | **F10** | **QSS Theming** | Tab widget & tab bar styling (`QTabWidget`, `QTabBar`, active underline indicator) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:59:06-04:00 |
 | **F11** | **QSS Theming** | Action buttons (`QPushButton` default, hover, pressed, disabled states) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:59:44-04:00 |
 | **F12** | **QSS Theming** | Text input (`QLineEdit` search bar & focus rings) | `src/main.cpp` | `Done` | 100% | 2026-10-02 12:00:18-04:00 |
-| **F13** | **QSS Theming** | Notepad tab editor (`QTextEdit` subpixel contrast and font readability) | `src/main.cpp`, `padwidget.cpp` | `Not Implemented` | 0% | 2026-10-02 |
+| **F13** | **QSS Theming** | Notepad tab editor (`QTextEdit` subpixel contrast and font readability) | `src/main.cpp`, `padwidget.cpp` | `Done` | 100% | 2026-10-02 12:00:42-04:00 |
 | **F14** | **QSS Theming** | Sleek minimal scrollbars (`QScrollBar:vertical` & `horizontal`) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
 | **F15** | **Icon Modernization** | Multi-resolution iconset generation from `images/icon.png` via `sips` | `kleopatra.rb` (`install`) | `Not Implemented` | 0% | 2026-10-02 |
 | **F16** | **Icon Modernization** | Apple `.icns` compilation via `iconutil` and bundle installation | `kleopatra.rb` (`install`) | `Not Implemented` | 0% | 2026-10-02 |
@@ -109,6 +109,8 @@
 
 | 9 | 2026-10-02 12:00:18-04:00 | `dc6c710` | feat(ui) | add Breeze search field focus rings | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F12 |
 
+| 10 | 2026-10-02 12:00:42-04:00 | `de4b749` | feat(ui) | preserve contrast in Notepad editors | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F13 |
+
 ---
 
 ## Change Log & Notes
@@ -132,3 +134,5 @@
 - **2026-10-02 11:59:44-04:00**: 6cb62e7 completed F11. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
 
 - **2026-10-02 12:00:18-04:00**: dc6c710 completed F12. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 12:00:42-04:00**: de4b749 completed F13. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.

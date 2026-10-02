@@ -90,6 +90,7 @@ class UiModernizationTest < Minitest::Test
           window.show();
           app.processEvents();
           window.ensurePolished();
+          if (tree->verticalScrollBar()->width() != 10) { return 5; }
           for (int index = 0; index < tabs->count(); ++index) {
               tabs->setCurrentIndex(index);
               app.processEvents();

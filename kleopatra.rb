@@ -480,6 +480,15 @@ class Kleopatra < Formula
           QTextEdit, QPlainTextEdit { background-color: #1b1e20; color: #eff0f1; border: 1px solid #3a3f44; border-radius: 6px; padding: 8px; selection-background-color: #3daee9; selection-color: #ffffff; }
           QTextEdit:focus, QPlainTextEdit:focus { border-color: #3daee9; }
           QTextEdit:disabled, QPlainTextEdit:disabled { color: #7a7f83; }
+
+          QScrollBar:vertical { background: transparent; width: 10px; margin: 0px; }
+          QScrollBar:horizontal { background: transparent; height: 10px; margin: 0px; }
+          QScrollBar::handle:vertical { background-color: rgba(255, 255, 255, 56); min-height: 24px; border-radius: 5px; }
+          QScrollBar::handle:horizontal { background-color: rgba(255, 255, 255, 56); min-width: 24px; border-radius: 5px; }
+          QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover { background-color: #3daee9; }
+          QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
+          QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
+          QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { background: transparent; }
       )QSS"));
     CPP
   end
