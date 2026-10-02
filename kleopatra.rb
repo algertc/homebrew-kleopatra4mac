@@ -363,11 +363,41 @@ class Kleopatra < Formula
     inreplace "src/main.cpp", "#include <QAccessible>", <<~CPP
       #include <QAccessible>
       #include <QStyleFactory>
+      #include <QPalette>
+      #include <QColor>
     CPP
 
     inreplace "src/main.cpp", "KleopatraApplication app(argc, argv);", <<~CPP.chomp
       KleopatraApplication app(argc, argv);
       app.setStyle(QStyleFactory::create(QStringLiteral("Fusion")));
+
+      QPalette breezeDark = app.palette();
+      breezeDark.setColor(QPalette::Window, QColor(35, 38, 41));
+      breezeDark.setColor(QPalette::WindowText, QColor(239, 240, 241));
+      breezeDark.setColor(QPalette::Base, QColor(27, 30, 32));
+      breezeDark.setColor(QPalette::AlternateBase, QColor(42, 46, 50));
+      breezeDark.setColor(QPalette::ToolTipBase, QColor(35, 38, 41));
+      breezeDark.setColor(QPalette::ToolTipText, QColor(239, 240, 241));
+      breezeDark.setColor(QPalette::Text, QColor(239, 240, 241));
+      breezeDark.setColor(QPalette::Button, QColor(49, 54, 59));
+      breezeDark.setColor(QPalette::ButtonText, QColor(239, 240, 241));
+      breezeDark.setColor(QPalette::BrightText, QColor(255, 255, 255));
+      breezeDark.setColor(QPalette::Link, QColor(61, 174, 233));
+      breezeDark.setColor(QPalette::LinkVisited, QColor(155, 89, 182));
+      breezeDark.setColor(QPalette::Highlight, QColor(61, 174, 233));
+      breezeDark.setColor(QPalette::HighlightedText, QColor(255, 255, 255));
+      breezeDark.setColor(QPalette::Light, QColor(71, 77, 83));
+      breezeDark.setColor(QPalette::Midlight, QColor(59, 66, 73));
+      breezeDark.setColor(QPalette::Mid, QColor(49, 54, 59));
+      breezeDark.setColor(QPalette::Dark, QColor(27, 30, 32));
+      breezeDark.setColor(QPalette::Shadow, QColor(20, 23, 25));
+      breezeDark.setColor(QPalette::Disabled, QPalette::Text, QColor(122, 127, 131));
+      breezeDark.setColor(QPalette::Disabled, QPalette::WindowText, QColor(122, 127, 131));
+      breezeDark.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(122, 127, 131));
+      breezeDark.setColor(QPalette::Disabled, QPalette::Highlight, QColor(70, 75, 80));
+      breezeDark.setColor(QPalette::Disabled, QPalette::HighlightedText, QColor(122, 127, 131));
+      app.setPalette(breezeDark);
+
     CPP
   end
 

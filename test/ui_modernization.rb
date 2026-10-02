@@ -27,9 +27,16 @@ class UiModernizationTest < Minitest::Test
       #include <QApplication>
       #include <QStyle>
       #include <QStyleFactory>
+      #include <QPalette>
+      #include <QColor>
       int main(int argc, char **argv) {
           QApplication app(argc, argv);
           #{setup}
+          if (app.palette().color(QPalette::Window) != QColor(35, 38, 41)
+              || app.palette().color(QPalette::Highlight) != QColor(61, 174, 233)
+              || app.palette().color(QPalette::Disabled, QPalette::Text) != QColor(122, 127, 131)) {
+              return 2;
+          }
           return app.style()->objectName() == QStringLiteral("fusion") ? 0 : 1;
       }
     CPP
