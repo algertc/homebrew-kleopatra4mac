@@ -5,16 +5,16 @@
 **Repository Path:** `/opt/homebrew/Library/Taps/kayyo321/homebrew-kleopatra4mac`
 **Working Branch:** `feature/modernize-ui-plasma-transparency`
 **Tracker Initialized:** 2026-10-02 11:45:00-04:00
-**Last Updated:** 2026-10-02 11:59:06-04:00
+**Last Updated:** 2026-10-02 11:59:44-04:00
 
 ---
 
 ## Overall Implementation Progress
 
 ```
-[███████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 38.9% Complete
+[██████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 44.4% Complete
 ```
-**Current Status: 38.9% Implemented (7 of 18 sub-tasks completed)**
+**Current Status: 44.4% Implemented (8 of 18 sub-tasks completed)**
 
 ---
 
@@ -49,7 +49,7 @@
 | **F8** | **QSS Theming** | Tree view & table view styling (`QTreeView`, `QTableView`, alternate rows, gridlines) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:58:17-04:00 |
 | **F9** | **QSS Theming** | Table header section styling (`QHeaderView::section` cyan bottom accent) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:58:42-04:00 |
 | **F10** | **QSS Theming** | Tab widget & tab bar styling (`QTabWidget`, `QTabBar`, active underline indicator) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:59:06-04:00 |
-| **F11** | **QSS Theming** | Action buttons (`QPushButton` default, hover, pressed, disabled states) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
+| **F11** | **QSS Theming** | Action buttons (`QPushButton` default, hover, pressed, disabled states) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:59:44-04:00 |
 | **F12** | **QSS Theming** | Text input (`QLineEdit` search bar & focus rings) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
 | **F13** | **QSS Theming** | Notepad tab editor (`QTextEdit` subpixel contrast and font readability) | `src/main.cpp`, `padwidget.cpp` | `Not Implemented` | 0% | 2026-10-02 |
 | **F14** | **QSS Theming** | Sleek minimal scrollbars (`QScrollBar:vertical` & `horizontal`) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
@@ -105,6 +105,8 @@
 
 | 7 | 2026-10-02 11:59:06-04:00 | `384ccbc` | feat(ui) | theme tabs with cyan selection | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F10 |
 
+| 8 | 2026-10-02 11:59:44-04:00 | `6cb62e7` | feat(ui) | style push button interaction states | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F11 |
+
 ---
 
 ## Change Log & Notes
@@ -124,3 +126,5 @@
 - **2026-10-02 11:58:42-04:00**: fca9765 completed F9. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
 
 - **2026-10-02 11:59:06-04:00**: 384ccbc completed F10. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 11:59:44-04:00**: 6cb62e7 completed F11. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.

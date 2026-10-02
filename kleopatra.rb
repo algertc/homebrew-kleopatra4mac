@@ -472,6 +472,10 @@ class Kleopatra < Formula
           QPushButton:pressed { background-color: #25292c; border-color: #1d74a4; }
           QPushButton:default, QPushButton:focus { border-color: #3daee9; }
           QPushButton:disabled { background-color: #232629; color: #7a7f83; border-color: #31363b; }
+
+          QLineEdit { background-color: #1b1e20; color: #eff0f1; border: 1px solid #474d53; border-radius: 5px; padding: 6px 10px; selection-background-color: #3daee9; selection-color: #ffffff; }
+          QLineEdit:focus { border-color: #3daee9; background-color: #232629; }
+          QLineEdit:disabled { color: #7a7f83; }
       )QSS"));
     CPP
   end
