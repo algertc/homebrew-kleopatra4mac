@@ -428,6 +428,12 @@ class Kleopatra < Formula
               padding: 5px 8px;
               border-radius: 4px;
           }
+
+          QToolBar { background-color: rgba(35, 38, 41, 217); border-bottom: 1px solid #3a3f44; spacing: 6px; padding: 4px; }
+          QToolButton { background: transparent; color: #eff0f1; border: 1px solid transparent; border-radius: 5px; padding: 6px 10px; }
+          QToolButton:hover { background-color: rgba(61, 174, 233, 46); border-color: #3daee9; }
+          QToolButton:pressed, QToolButton:checked { background-color: rgba(61, 174, 233, 89); border-color: #3daee9; }
+          QToolButton:disabled { background: transparent; color: #7a7f83; border-color: transparent; }
       )QSS"));
     CPP
   end

@@ -24,6 +24,10 @@ class UiModernizationTest < Minitest::Test
     Dir.chdir(@directory) { @formula.modernize_ui }
     source = (@directory/"src/main.cpp").read
     setup = source.match(/KleopatraApplication app\(argc, argv\);(.*?)KCrash::initialize\(\);/m)[1]
+    setup = setup.sub("app.setStyleSheet", <<~CPP)
+      if (app.style()->objectName() != QStringLiteral("fusion")) { return 1; }
+      app.setStyleSheet
+    CPP
     (@directory/"theme.cpp").write <<~CPP
       #include <QApplication>
       #include <QStyle>
@@ -34,6 +38,16 @@ class UiModernizationTest < Minitest::Test
       #include <QMenuBar>
       #include <QMenu>
       #include <QStatusBar>
+      #include <QToolBar>
+      #include <QToolButton>
+      #include <QTreeWidget>
+      #include <QTableWidget>
+      #include <QTabWidget>
+      #include <QPushButton>
+      #include <QLineEdit>
+      #include <QTextEdit>
+      #include <QScrollBar>
+      #include <QVBoxLayout>
       int main(int argc, char **argv) {
           QApplication app(argc, argv);
           #{setup}
@@ -45,9 +59,33 @@ class UiModernizationTest < Minitest::Test
           QMainWindow window;
           window.menuBar()->addMenu(QStringLiteral("Test"))->addAction(QStringLiteral("Action"));
           window.statusBar()->showMessage(QStringLiteral("Ready"));
+          window.addToolBar(QStringLiteral("Actions"))->addAction(QStringLiteral("Import"));
+          auto central = new QWidget(&window);
+          auto layout = new QVBoxLayout(central);
+          auto tabs = new QTabWidget(central);
+          auto tree = new QTreeWidget(tabs);
+          tree->setHeaderLabels({QStringLiteral("Name"), QStringLiteral("Email")});
+          tree->setAlternatingRowColors(true);
+          for (int i = 0; i < 30; ++i) {
+              new QTreeWidgetItem(tree, {QString::number(i), QStringLiteral("test@example.com")});
+          }
+          tree->setCurrentItem(tree->topLevelItem(0));
+          tabs->addTab(tree, QStringLiteral("Certificates"));
+          tabs->addTab(new QTextEdit(QStringLiteral("Notepad sample"), tabs), QStringLiteral("Notepad"));
+          layout->addWidget(new QLineEdit(QStringLiteral("Search"), central));
+          layout->addWidget(tabs);
+          auto button = new QPushButton(QStringLiteral("Disabled"), central);
+          button->setEnabled(false);
+          layout->addWidget(button);
+          window.setCentralWidget(central);
           window.resize(640, 480);
+          window.show();
+          app.processEvents();
           window.ensurePolished();
-          return window.grab().isNull() ? 3 : 0;
+          if (window.grab().isNull()) { return 3; }
+          tabs->setCurrentIndex(1);
+          app.processEvents();
+          return window.grab().isNull() ? 4 : 0;
       }
     CPP
     Dir.chdir(@directory) do
