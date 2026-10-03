@@ -6,14 +6,9 @@ class Kleopatra < Formula
   homepage "https://invent.kde.org/pim/kleopatra"
   url "https://github.com/KDE/kleopatra/archive/refs/tags/v22.07.80.tar.gz"
   sha256 "92642a820fe8ca17b8ba29f8c8e72023765a075422fb37eef82d85bf67729a25"
+  revision 1
   license all_of: ["GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
   keg_only "not linked to prevent conflicts with any gpgme or kde libs"
-
-  bottle do
-    root_url "https://github.com/algertc/homebrew-kleopatra4mac/releases/download/latest"
-    sha256 monterey:       "5a3a4892a6ba475bd7e759dc08b4537182964b0fe650545c383aba921ad12803"
-    sha256 arm64_monterey: "b3a7b265427c680b16bf1dacc03ebf6b4c5c3a7d96d5fd13b067cc0b50946467"
-  end
 
   depends_on "boost" => :build
   depends_on "cmake" => :build
@@ -32,15 +27,21 @@ class Kleopatra < Formula
 
   uses_from_macos "zip"
 
-  # qgpgme, gpgmepp
+  resource "extra-cmake-modules" do
+    url "https://github.com/KDE/extra-cmake-modules/archive/refs/tags/v5.96.0.tar.gz"
+    sha256 "df438ac68dfed744c8f0b27dd0e0f4a2df0cf0050c99d4b41a060366fd1e6087"
+  end
+
+  # GPGME 1.17 requires libassuan API 2; Homebrew's libassuan uses API 3.
+  resource "libassuan" do
+    url "https://www.gnupg.org/ftp/gcrypt/libassuan/libassuan-2.5.7.tar.bz2"
+    sha256 "0103081ffc27838a2e50479153ca105e873d3d65d8a9593282e9c94c7e6afb76"
+  end
+
+  # GPGME, GpgME++ and QGpgME
   resource "gpgme" do
     url "https://www.gnupg.org/ftp/gcrypt/gpgme/gpgme-1.17.1.tar.bz2"
     sha256 "711eabf5dd661b9b04be9edc9ace2a7bc031f6bd9d37a768d02d0efdef108f5f"
-  end
-
-  resource "gpgmepp" do
-    url "https://github.com/KDE/gpgmepp/archive/refs/tags/v16.08.3.tar.gz"
-    sha256 "b988830a88448703128bc2bd2830e8aad2732b3ad45b6f26360b8da358cd9a96"
   end
 
   # knotifications depends on it
@@ -168,31 +169,35 @@ class Kleopatra < Formula
   end
 
   def install
-    args = std_cmake_args
+    args = std_cmake_args + %W[
+      -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+      -DQT_MAJOR_VERSION=5
+      -DCMAKE_PREFIX_PATH=#{prefix};#{Formula["qt@5"].opt_prefix}
+      -DECM_DIR=#{prefix}/share/ECM/cmake
+    ]
 
-    # qgpgme, gpgmepp
+    resource("extra-cmake-modules").stage do
+      system "cmake", ".", *args
+      system "make", "install"
+    end
+
+    resource("libassuan").stage do
+      system "./configure", "--prefix=#{prefix}"
+      system "make", "install"
+    end
+
+    # GPGME, GpgME++ and QGpgME
     resource("gpgme").stage do
-      system "./configure --prefix=#{prefix}"
-
-      # Not sure if all ramining folders need this flag
-      inreplace "lang/qt/src/Makefile" do |s|
-        s.gsub!(/\-std=c\+\+11/, "-std=c++17")
-      end
-      inreplace "lang/qt/tests/Makefile" do |s|
-        s.gsub!(/\-std=c\+\+11/, "-std=c++17")
-      end
+      system "./configure", "--prefix=#{prefix}", "--with-libassuan-prefix=#{prefix}",
+             "CXXFLAGS=#{ENV["CXXFLAGS"]} -std=c++17",
+             "--disable-gpg-test", "--disable-gpgsm-test", "--disable-g13-test"
 
       system "make", "install"
     end
 
-    resource("gpgmepp").stage do
-      system "cmake", ".", *args
-      system "make", "install", "prefix=#{prefix}"
-    end
-
     # KF5 depends on it
     resource("phonon").stage do
-      system "cmake", ".", *args
+      system "cmake", ".", *args, "-DPHONON_BUILD_EXPERIMENTAL=OFF"
 
       # ensure application is installed to the prefix in Cellar
       inreplace "settings/cmake_install.cmake" do |s|
@@ -319,11 +324,6 @@ class Kleopatra < Formula
     end
     # end of KF5 libs
 
-    # hide away gpgme++ from kf5, we we need gpgme files include/gpgme++
-    chdir "#{prefix}/include/KF5" do
-      system "mv", "gpgme++", "gpgme++.not.used"
-    end
-
     resource("libkleo").stage do
       system "cmake", ".", *args
       system "make", "install", "prefix=#{prefix}"
@@ -336,6 +336,9 @@ class Kleopatra < Formula
     inreplace "src/view/padwidget.cpp" do |s|
       s.gsub!(/QStringLiteral\(\"Monospace\"\)/, "QFontDatabase::systemFont(QFontDatabase::FixedFont)")
     end
+
+    # shared_ptr::unique was removed in C++20; preserve copy-on-write detachment.
+    inreplace %w[src/crypto/sender.cpp src/crypto/recipient.cpp], "!d.unique()", "d.use_count() != 1"
 
     iconset = create_iconset(buildpath)
     modernize_window

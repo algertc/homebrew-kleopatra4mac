@@ -226,6 +226,22 @@ class UiModernizationTest < Minitest::Test
     assert status.success? && output.strip == "kleopatra.icns"
   end
 
+  def test_missing_native_window_anchor_fails
+    source = @directory/"src/mainwindow.cpp"
+    source.write source.read.sub("KXmlGuiWindow::showEvent(e);", "KXmlGuiWindow::showEvent(event);")
+    capture_io do
+      assert_raises(BuildError) { Dir.chdir(@directory) { @formula.modernize_window } }
+    end
+  end
+
+  def test_missing_native_build_anchor_fails
+    source = @directory/"src/CMakeLists.txt"
+    source.write source.read.sub("add_executable(kleopatra_bin", "add_executable(renamed_bin")
+    capture_io do
+      assert_raises(BuildError) { Dir.chdir(@directory) { @formula.modernize_window } }
+    end
+  end
+
   def test_missing_startup_anchor_fails
     source = @directory/"src/main.cpp"
     source.write source.read.sub("KleopatraApplication app(argc, argv);", "KleopatraApplication renamed(argc, argv);")

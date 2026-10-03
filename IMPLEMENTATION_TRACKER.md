@@ -5,16 +5,16 @@
 **Repository Path:** `/opt/homebrew/Library/Taps/kayyo321/homebrew-kleopatra4mac`
 **Working Branch:** `feature/modernize-ui-plasma-transparency`
 **Tracker Initialized:** 2026-10-02 11:45:00-04:00
-**Last Updated:** 2026-10-03 12:31:24-04:00
+**Last Updated:** 2026-10-03 12:38:03-04:00
 
 ---
 
 ## Overall Implementation Progress
 
 ```
-[████████████████████████████████████████████░░░░░░] 88.9% Complete
+[███████████████████████████████████████████████░░░] 94.4% Complete
 ```
-**Current Status: 88.9% Implemented (16 of 18 sub-tasks completed)**
+**Current Status: 94.4% Implemented (17 of 18 sub-tasks completed)**
 
 ---
 
@@ -55,8 +55,8 @@
 | **F14** | **QSS Theming** | Sleek minimal scrollbars (`QScrollBar:vertical` & `horizontal`) | `src/main.cpp` | `Done` | 100% | 2026-10-02 12:01:14-04:00 |
 | **F15** | **Icon Modernization** | Multi-resolution iconset generation from `images/icon.png` via `sips` | `kleopatra.rb` (`install`) | `Done` | 100% | 2026-10-03 12:30:21-04:00 |
 | **F16** | **Icon Modernization** | Apple `.icns` compilation via `iconutil` and bundle installation | `kleopatra.rb` (`install`) | `Done` | 100% | 2026-10-03 12:31:24-04:00 |
-| **F17** | **Icon Modernization** | In-app window & dialog icon injection (`app.setWindowIcon`) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
-| **F18** | **Build & Upstream** | Full source compilation verification, runtime test, and PR preparation | `kleopatra.rb`, Git | `Not Implemented` | 0% | 2026-10-02 |
+| **F17** | **Icon Modernization** | In-app window & dialog icon injection (`app.setWindowIcon`) | `src/main.cpp` | `Done` | 100% | 2026-10-03 12:31:46-04:00 |
+| **F18** | **Build & Upstream** | Full source compilation verification, runtime test, and PR preparation | `kleopatra.rb`, Git | `In Development (25%)` | 25% | 2026-10-03 12:34:49-04:00 |
 
 ---
 
@@ -67,18 +67,18 @@
 - [x] Create comprehensive implementation plan (`UI_MODERNIZATION_IMPLEMENTATION_PLAN.md`). *(Completed 2026-10-02)*
 - [x] Establish granular progress tracker with commit protocols. *(Completed 2026-10-02)*
 
-### Phase 2: Core Formula Inreplace Mutations (Status: Not Started)
-- [ ] Inject native macOS vibrancy bridge and translucent window attributes into `src/mainwindow.cpp`.
-- [ ] Inject `Fusion` base style, KDE Breeze Dark `QPalette`, and comprehensive QSS into `src/main.cpp`.
-- [ ] Add `.iconset` and `.icns` generation script in `kleopatra.rb` bundle staging.
+### Phase 2: Core Formula Inreplace Mutations (Status: Complete)
+- [x] Inject native macOS vibrancy bridge and translucent window attributes into `src/mainwindow.cpp`.
+- [x] Inject `Fusion` base style, KDE Breeze Dark `QPalette`, and comprehensive QSS into `src/main.cpp`.
+- [x] Add `.iconset` and `.icns` generation script in `kleopatra.rb` bundle staging.
 
-### Phase 3: Compilation, Linking & Runtime Verification (Status: Not Started)
+### Phase 3: Compilation, Linking & Runtime Verification (Status: In Progress)
 - [ ] Run `brew install --build-from-source kayyo321/kleopatra4mac/kleopatra`.
 - [ ] Verify dynamic linkage via `otool -L` and check for missing RPATHs.
 - [ ] Inspect Qt plugin diagnostic logs with `QT_DEBUG_PLUGINS=1`.
 - [ ] Launch `.app` bundle and verify visual vibrancy blur and Plasma Breeze widgets.
 
-### Phase 4: Git History & Upstream Pull Request (Status: Not Started)
+### Phase 4: Git History & Upstream Pull Request (Status: In Progress)
 - [ ] Verify all atomic conventional commits are logged in the tracker.
 - [ ] Push `feature/modernize-ui-plasma-transparency` to `origin`.
 - [ ] Open GitHub Pull Request against `algertc/homebrew-kleopatra4mac:main` with formatted template.
@@ -123,6 +123,10 @@
 
 | 16 | 2026-10-03 12:31:24-04:00 | `6f144cd` | feat(icon) | install native bundle icons | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F16 |
 
+| 17 | 2026-10-03 12:31:46-04:00 | `a634a10` | feat(icon) | use bundle assets in Qt windows | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F17 |
+
+| 18 | 2026-10-03 12:38:03-04:00 | `309f76d` | fix(build) | support current Homebrew dependencies | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F18 |
+
 ---
 
 ## Change Log & Notes
@@ -160,3 +164,9 @@
 - **2026-10-03 12:30:21-04:00**: 318f526 completed F15. Generate all ten standard and Retina iconset PNGs from the tap icon using macOS sips. Fit the non-square source within a 1024-pixel square canvas before scaling to preserve its aspect ratio. Stage the iconset in Homebrew buildpath before CMake; inspect every generated PNG dimension in the focused test. All four runtime and packaging tests pass.
 
 - **2026-10-03 12:31:24-04:00**: 6f144cd completed F16. Compile the staged iconset with iconutil and install kleopatra.icns into the app Resources directory after CMake installation. Install the matching PNG for Qt and update CFBundleIconFile through PlistBuddy before post_install archives the bundle. The bundle fixture verifies ICNS magic, PNG presence and plist lookup; five focused tests pass.
+
+- **2026-10-03 12:31:46-04:00**: a634a10 completed F17. Inject QIcon loading after KAboutData registration so KDE initialization cannot replace the application icon. Resolve the PNG relative to applicationDirPath rather than embedding a Cellar or tap path. Extend the Qt 5 harness to move its app bundle before launch and render the application and inherited dialog icons. All five focused tests pass, including relocation and Cocoa lifecycle checks.
+
+- **2026-10-03 12:34:49-04:00**: Phase 2 is complete. Full source installation reached legacy GPGME configuration and failed because current Homebrew libassuan exposes API 3, while pinned GPGME requires API 2. A private checksum-pinned libassuan 2.5.7 resource and CMake 4 compatibility settings are being verified in the next full build.
+
+- **2026-10-03 12:38:03-04:00**: 309f76d advanced F18. Bundle checksum-pinned libassuan API 2 privately in the Kleopatra keg for pinned GPGME 1.17, leaving Homebrew GnuPG on its own API 3 dependency. Pass C++17 explicitly at GPGME configure time instead of requiring a generated compiler flag that Clang no longer emits. Set CMake 4 minimum policy compatibility, Qt major version 5 and the private prefix search path for KF5. The focused UI/Cocoa/icon suite passes; full source compilation is still in progress.
