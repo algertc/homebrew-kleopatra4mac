@@ -5,16 +5,16 @@
 **Repository Path:** `/opt/homebrew/Library/Taps/kayyo321/homebrew-kleopatra4mac`
 **Working Branch:** `feature/modernize-ui-plasma-transparency`
 **Tracker Initialized:** 2026-10-02 11:45:00-04:00
-**Last Updated:** 2026-10-03 12:59:47-04:00
+**Last Updated:** 2026-10-03 13:19:59-04:00
 
 ---
 
 ## Overall Implementation Progress
 
 ```
-[███████████████████████████████████████████████░░░] 94.4% Complete
+[██████████████████████████████████████████████████] 100.0% Complete
 ```
-**Current Status: 94.4% Implemented (17 of 18 sub-tasks completed)**
+**Current Status: 100.0% Implemented (18 of 18 sub-tasks completed)**
 
 ---
 
@@ -56,7 +56,7 @@
 | **F15** | **Icon Modernization** | Multi-resolution iconset generation from `images/icon.png` via `sips` | `kleopatra.rb` (`install`) | `Done` | 100% | 2026-10-03 12:30:21-04:00 |
 | **F16** | **Icon Modernization** | Apple `.icns` compilation via `iconutil` and bundle installation | `kleopatra.rb` (`install`) | `Done` | 100% | 2026-10-03 12:31:24-04:00 |
 | **F17** | **Icon Modernization** | In-app window & dialog icon injection (`app.setWindowIcon`) | `src/main.cpp` | `Done` | 100% | 2026-10-03 12:31:46-04:00 |
-| **F18** | **Build & Upstream** | Full source compilation verification, runtime test, and PR preparation | `kleopatra.rb`, Git | `In Development (60%)` | 60% | 2026-10-03 12:34:49-04:00 |
+| **F18** | **Build & Upstream** | Full source compilation verification, runtime test, and PR preparation | `kleopatra.rb`, Git | `Done` | 100% | 2026-10-03 13:19:59-04:00 |
 
 ---
 
@@ -72,11 +72,11 @@
 - [x] Inject `Fusion` base style, KDE Breeze Dark `QPalette`, and comprehensive QSS into `src/main.cpp`.
 - [x] Add `.iconset` and `.icns` generation script in `kleopatra.rb` bundle staging.
 
-### Phase 3: Compilation, Linking & Runtime Verification (Status: In Progress)
-- [ ] Run `brew install --build-from-source kayyo321/kleopatra4mac/kleopatra`.
-- [ ] Verify dynamic linkage via `otool -L` and check for missing RPATHs.
-- [ ] Inspect Qt plugin diagnostic logs with `QT_DEBUG_PLUGINS=1`.
-- [ ] Launch `.app` bundle and verify visual vibrancy blur and Plasma Breeze widgets.
+### Phase 3: Compilation, Linking & Runtime Verification (Status: Complete)
+- [x] Run `brew install --build-from-source kayyo321/kleopatra4mac/kleopatra`.
+- [x] Verify dynamic linkage via `otool -L` and check for missing RPATHs.
+- [x] Inspect Qt plugin diagnostic logs with `QT_DEBUG_PLUGINS=1`.
+- [x] Launch `.app` bundle and verify visual vibrancy blur and Plasma Breeze widgets.
 
 ### Phase 4: Git History & Upstream Pull Request (Status: In Progress)
 - [ ] Verify all atomic conventional commits are logged in the tracker.
@@ -91,43 +91,45 @@
 
 | # | Date & Timestamp | Commit Hash | Scope / Type | Summary of Changes | Files Changed | Related Feature IDs |
 | :---: | :---: | :---: | :---: | :--- | :--- | :---: |
-| 1 | 2026-10-02 11:53:04-04:00 | `c8a300b` | feat(ui) | select Fusion rendering on macOS | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F4 |
+| 1 | 2026-10-02 11:53:04-04:00 | `c8a300b` | feat(ui) | select Fusion rendering on macOS | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 2 | 2026-10-02 11:55:40-04:00 | `6bf3367` | feat(ui) | apply the Breeze Dark palette | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F5 |
+| 2 | 2026-10-02 11:55:40-04:00 | `6bf3367` | feat(ui) | apply the Breeze Dark palette | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 3 | 2026-10-02 11:55:57-04:00 | `7e9bff9` | feat(ui) | style menus and status messages | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F6 |
+| 3 | 2026-10-02 11:55:57-04:00 | `7e9bff9` | feat(ui) | style menus and status messages | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 4 | 2026-10-02 11:57:38-04:00 | `f0b7795` | feat(ui) | style toolbars and action buttons | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F7 |
+| 4 | 2026-10-02 11:57:38-04:00 | `f0b7795` | feat(ui) | style toolbars and action buttons | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 5 | 2026-10-02 11:58:17-04:00 | `44d5b1e` | feat(ui) | theme certificate trees and tables | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F8 |
+| 5 | 2026-10-02 11:58:17-04:00 | `44d5b1e` | feat(ui) | theme certificate trees and tables | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 6 | 2026-10-02 11:58:42-04:00 | `fca9765` | feat(ui) | add Breeze certificate headers | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F9 |
+| 6 | 2026-10-02 11:58:42-04:00 | `fca9765` | feat(ui) | add Breeze certificate headers | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
 
-| 7 | 2026-10-02 11:59:06-04:00 | `384ccbc` | feat(ui) | theme tabs with cyan selection | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F10 |
+| 7 | 2026-10-02 11:59:06-04:00 | `384ccbc` | feat(ui) | theme tabs with cyan selection | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
 
-| 8 | 2026-10-02 11:59:44-04:00 | `6cb62e7` | feat(ui) | style push button interaction states | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F11 |
+| 8 | 2026-10-02 11:59:44-04:00 | `6cb62e7` | feat(ui) | style push button interaction states | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 9 | 2026-10-02 12:00:18-04:00 | `dc6c710` | feat(ui) | add Breeze search field focus rings | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F12 |
+| 9 | 2026-10-02 12:00:18-04:00 | `dc6c710` | feat(ui) | add Breeze search field focus rings | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
 
-| 10 | 2026-10-02 12:00:42-04:00 | `de4b749` | feat(ui) | preserve contrast in Notepad editors | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F13 |
+| 10 | 2026-10-02 12:00:42-04:00 | `de4b749` | feat(ui) | preserve contrast in Notepad editors | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
 
-| 11 | 2026-10-02 12:01:14-04:00 | `1012895` | feat(ui) | add compact Breeze scrollbars | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F14 |
+| 11 | 2026-10-02 12:01:14-04:00 | `1012895` | feat(ui) | add compact Breeze scrollbars | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 12 | 2026-10-03 12:27:39-04:00 | `18bc8c2` | feat(ui) | add native window vibrancy | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F1 |
+| 12 | 2026-10-03 12:27:39-04:00 | `18bc8c2` | feat(ui) | add native window vibrancy | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 13 | 2026-10-03 12:28:32-04:00 | `38bf577` | feat(ui) | enable translucent main windows | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F2 |
+| 13 | 2026-10-03 12:28:32-04:00 | `38bf577` | feat(ui) | enable translucent main windows | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 14 | 2026-10-03 12:29:25-04:00 | `f502ec8` | feat(ui) | reveal vibrancy through the canvas | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F3 |
+| 14 | 2026-10-03 12:29:25-04:00 | `f502ec8` | feat(ui) | reveal vibrancy through the canvas | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 15 | 2026-10-03 12:30:21-04:00 | `318f526` | feat(icon) | generate complete macOS iconsets | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F15 |
+| 15 | 2026-10-03 12:30:21-04:00 | `318f526` | feat(icon) | generate complete macOS iconsets | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 16 | 2026-10-03 12:31:24-04:00 | `6f144cd` | feat(icon) | install native bundle icons | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F16 |
+| 16 | 2026-10-03 12:31:24-04:00 | `6f144cd` | feat(icon) | install native bundle icons | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 17 | 2026-10-03 12:31:46-04:00 | `a634a10` | feat(icon) | use bundle assets in Qt windows | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F17 |
+| 17 | 2026-10-03 12:31:46-04:00 | `a634a10` | feat(icon) | use bundle assets in Qt windows | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 18 | 2026-10-03 12:55:56-04:00 | `84b7664` | fix(build) | support current Homebrew dependencies | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F18 |
+| 18 | 2026-10-03 12:55:56-04:00 | `84b7664` | fix(build) | support current Homebrew dependencies | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
-| 19 | 2026-10-03 12:56:25-04:00 | `2063487` | fix(ui) | place vibrancy beneath Qt content | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F1 |
+| 19 | 2026-10-03 12:56:25-04:00 | `2063487` | fix(ui) | place vibrancy beneath Qt content | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 20 | 2026-10-03 13:19:03-04:00 | `8399cbc` | fix(test) | isolate the installed app smoke test | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
 
 ---
 
@@ -178,3 +180,7 @@
 - **2026-10-03 12:56:25-04:00**: 2063487 completed F1. Place the Cocoa material as a sibling below Qt native content rather than a child overlay, because ordinary QWidget controls share the native content view. Use the content frame and autoresizing mask to cover the canvas without obscuring rendered controls. Strengthen the Cocoa test to inspect sibling ordering, material, resize geometry and duplicate prevention; all seven focused tests pass.
 
 - **2026-10-03 12:59:47-04:00**: Seven focused tests pass, including fail-fast native-window/CMake patch anchors and the corrected sibling placement beneath Qt content. The final source build includes all compatibility fixes; an isolated runtime keyring is prepared for import and UI verification. Intel bridge syntax compilation also passed against the installed macOS SDK.
+
+- **2026-10-03 13:19:03-04:00**: 8399cbc completed F18. Run the installed Qt application offscreen with a private Unix D-Bus session so Homebrew sandbox checks do not trigger macOS application-registration failures or depend on launchd. Verify packaged ICNS and PNG resources before startup. Declare gettext and xz runtime dependencies identified by the installed linkage audit, which now passes. Full source compilation, the installed smoke test and seven focused Qt/Cocoa/icon tests pass. Native app startup, Notepad typing, certificate import and exported-public-key fingerprint were checked in an isolated test keyring. Homebrew typecheck/style still report legacy formula issues; online changed core tests pass.
+
+- **2026-10-03 13:19:59-04:00**: F18 verification completed on macOS 26.3.1 / Apple Silicon with Qt 5.15.19, Apple Clang 17 and CMake 4.4.3. Full source installation, installed offscreen/private-D-Bus smoke test, seven focused tests and brew linkage --test pass. AppKit linkage and installed-keg RPATHs resolve; an unused build-directory RPATH remains from upstream CMake. Qt plugin logs show Cocoa and image plugins loading without fatal loader or QSS errors. The reopened native app displays Breeze controls and accepts Notepad text; an isolated public certificate import and export fingerprint match pass. The Cocoa harness confirms material placement beneath Qt content, resizing and effect reuse. Intel bridge syntax compilation passes; Intel runtime and other macOS releases were not tested. Homebrew typecheck/lgtm retain the inherited Cache type-template error; style retains existing formula conventions. Optional KF5 platform-theme, tray and font warnings remain.
