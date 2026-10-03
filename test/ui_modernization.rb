@@ -26,6 +26,11 @@ class UiModernizationTest < Minitest::Test
     Dir.chdir(@directory) { @formula.modernize_ui }
     source = (@directory/"src/main.cpp").read
     setup = source.match(/KleopatraApplication app\(argc, argv\);(.*?)KCrash::initialize\(\);/m)[1]
+    setup += source.match(/KAboutData::setApplicationData\(aboutData\);(.*?)if \(Kleo::userIsElevated/m)[1]
+    original = @directory/"original.app"
+    (original/"Contents/MacOS").mkpath
+    (original/"Contents/Resources").mkpath
+    FileUtils.cp Pathname(@formula.path).dirname/"images/icon.png", original/"Contents/Resources/kleopatra.png"
     setup = setup.sub("app.setStyleSheet", <<~CPP)
       if (app.style()->objectName() != QStringLiteral("fusion")) { return 1; }
       app.setStyleSheet
@@ -36,6 +41,8 @@ class UiModernizationTest < Minitest::Test
       #include <QStyleFactory>
       #include <QPalette>
       #include <QColor>
+      #include <QIcon>
+      #include <QDialog>
       #include <QMainWindow>
       #include <QMenuBar>
       #include <QMenu>
@@ -58,6 +65,8 @@ class UiModernizationTest < Minitest::Test
               || app.palette().color(QPalette::Disabled, QPalette::Text) != QColor(122, 127, 131)) {
               return 2;
           }
+          QDialog dialog;
+          if (app.windowIcon().pixmap(32, 32).isNull() || dialog.windowIcon().pixmap(32, 32).isNull()) { return 7; }
           QMainWindow window;
           window.menuBar()->addMenu(QStringLiteral("Test"))->addAction(QStringLiteral("Action"));
           window.statusBar()->showMessage(QStringLiteral("Ready"));
@@ -112,9 +121,12 @@ class UiModernizationTest < Minitest::Test
                                                   "-I#{Utils::Path.formula_opt_lib("qt@5")}/QtCore.framework/Headers",
                                                   "-F#{Utils::Path.formula_opt_lib("qt@5")}",
                                                   "-framework", "QtWidgets",
-                                                  "-framework", "QtGui", "-framework", "QtCore", "-o", "theme"
+                                                  "-framework", "QtGui", "-framework", "QtCore",
+                                                  "-o", (original/"Contents/MacOS/theme").to_s
 
-      _, errors, status = Open3.capture3({ "QT_QPA_PLATFORM" => "offscreen" }, "./theme")
+      FileUtils.mv original, @directory/"relocated.app"
+      _, errors, status = Open3.capture3({ "QT_QPA_PLATFORM" => "offscreen" },
+                                         (@directory/"relocated.app/Contents/MacOS/theme").to_s)
       assert status.success? && !errors.match?(/Could not parse|Unknown property/), errors
     end
   end

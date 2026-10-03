@@ -456,6 +456,13 @@ class Kleopatra < Formula
       #include <QStyleFactory>
       #include <QPalette>
       #include <QColor>
+      #include <QIcon>
+    CPP
+
+    inreplace "src/main.cpp", "KAboutData::setApplicationData(aboutData);", <<~CPP.chomp
+      KAboutData::setApplicationData(aboutData);
+      app.setWindowIcon(QIcon(QCoreApplication::applicationDirPath()
+                             + QStringLiteral("/../Resources/kleopatra.png")));
     CPP
 
     inreplace "src/main.cpp", "KleopatraApplication app(argc, argv);", <<~CPP.chomp
