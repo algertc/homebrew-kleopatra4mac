@@ -178,6 +178,23 @@ class UiModernizationTest < Minitest::Test
     end
   end
 
+  def test_generated_iconset
+    iconset = @formula.create_iconset(@directory)
+    dimensions = iconset.children.to_h do |file|
+      output, status = Open3.capture2("/usr/bin/sips", "-g", "pixelWidth", "-g", "pixelHeight", file.to_s)
+      raise "Icon inspection failed" unless status.success?
+
+      [file.basename.to_s, output.scan(/pixel(?:Width|Height): (\d+)/).flatten.map(&:to_i)]
+    end
+    assert_equal({
+      "icon_16x16.png" => [16, 16], "icon_16x16@2x.png" => [32, 32],
+      "icon_32x32.png" => [32, 32], "icon_32x32@2x.png" => [64, 64],
+      "icon_128x128.png" => [128, 128], "icon_128x128@2x.png" => [256, 256],
+      "icon_256x256.png" => [256, 256], "icon_256x256@2x.png" => [512, 512],
+      "icon_512x512.png" => [512, 512], "icon_512x512@2x.png" => [1024, 1024]
+    }, dimensions)
+  end
+
   def test_missing_startup_anchor_fails
     source = @directory/"src/main.cpp"
     source.write source.read.sub("KleopatraApplication app(argc, argv);", "KleopatraApplication renamed(argc, argv);")

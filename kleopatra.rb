@@ -337,6 +337,7 @@ class Kleopatra < Formula
       s.gsub!(/QStringLiteral\(\"Monospace\"\)/, "QFontDatabase::systemFont(QFontDatabase::FixedFont)")
     end
 
+    create_iconset(buildpath)
     modernize_window
     modernize_ui
 
@@ -358,6 +359,20 @@ class Kleopatra < Formula
 
     # this fixes loading of libdbus in runtime from qt on apple m1
     system "install_name_tool", "-add_rpath", "#{HOMEBREW_PREFIX}/lib", kleopatra
+  end
+
+  def create_iconset(directory)
+    iconset = directory/"kleopatra.iconset"
+    iconset.mkpath
+    square = directory/"kleopatra-icon.png"
+    system "/usr/bin/sips", "--resampleHeightWidthMax", "1024", Pathname(__dir__)/"images/icon.png", "--out", square
+    system "/usr/bin/sips", "--padToHeightWidth", "1024", "1024", square
+    [16, 32, 128, 256, 512].each do |size|
+      system "/usr/bin/sips", "-z", size.to_s, size.to_s, square, "--out", iconset/"icon_#{size}x#{size}.png"
+      system "/usr/bin/sips", "-z", (size * 2).to_s, (size * 2).to_s, square,
+             "--out", iconset/"icon_#{size}x#{size}@2x.png"
+    end
+    iconset
   end
 
   def modernize_window
