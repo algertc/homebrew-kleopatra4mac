@@ -195,6 +195,25 @@ class UiModernizationTest < Minitest::Test
     }, dimensions)
   end
 
+  def test_bundle_icon_installation
+    iconset = @formula.create_iconset(@directory)
+    bundle = @directory/"kleopatra.app"
+    (bundle/"Contents").mkpath
+    (bundle/"Contents/Info.plist").write <<~PLIST
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0"><dict><key>CFBundleIconFile</key><string>legacy.icns</string></dict></plist>
+    PLIST
+    @formula.install_modern_icon(iconset, bundle)
+    resources = bundle/"Contents/Resources"
+    raise "Icon archive missing" if (resources/"kleopatra.icns").read(4) != "icns"
+    raise "Runtime icon missing" unless (resources/"kleopatra.png").size.positive?
+
+    output, status = Open3.capture2("/usr/libexec/PlistBuddy", "-c", "Print :CFBundleIconFile",
+                                    (bundle/"Contents/Info.plist").to_s)
+    assert status.success? && output.strip == "kleopatra.icns"
+  end
+
   def test_missing_startup_anchor_fails
     source = @directory/"src/main.cpp"
     source.write source.read.sub("KleopatraApplication app(argc, argv);", "KleopatraApplication renamed(argc, argv);")

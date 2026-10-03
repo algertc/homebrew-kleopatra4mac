@@ -337,7 +337,7 @@ class Kleopatra < Formula
       s.gsub!(/QStringLiteral\(\"Monospace\"\)/, "QFontDatabase::systemFont(QFontDatabase::FixedFont)")
     end
 
-    create_iconset(buildpath)
+    iconset = create_iconset(buildpath)
     modernize_window
     modernize_ui
 
@@ -353,6 +353,7 @@ class Kleopatra < Formula
     end
 
     system "make", "install"
+    install_modern_icon(iconset, prefix/"Applications/KDE/kleopatra.app")
 
     kleopatra = "#{prefix}/Applications/KDE/kleopatra.app/Contents/MacOS/kleopatra"
     system "install_name_tool", "-add_rpath", "#{prefix}/lib", kleopatra
@@ -373,6 +374,14 @@ class Kleopatra < Formula
              "--out", iconset/"icon_#{size}x#{size}@2x.png"
     end
     iconset
+  end
+
+  def install_modern_icon(iconset, bundle)
+    resources = bundle/"Contents/Resources"
+    resources.mkpath
+    system "/usr/bin/iconutil", "-c", "icns", "-o", resources/"kleopatra.icns", iconset
+    resources.install iconset.parent/"kleopatra-icon.png" => "kleopatra.png"
+    system "/usr/libexec/PlistBuddy", "-c", "Set :CFBundleIconFile kleopatra.icns", bundle/"Contents/Info.plist"
   end
 
   def modernize_window

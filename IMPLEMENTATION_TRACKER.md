@@ -5,16 +5,16 @@
 **Repository Path:** `/opt/homebrew/Library/Taps/kayyo321/homebrew-kleopatra4mac`
 **Working Branch:** `feature/modernize-ui-plasma-transparency`
 **Tracker Initialized:** 2026-10-02 11:45:00-04:00
-**Last Updated:** 2026-10-03 12:29:25-04:00
+**Last Updated:** 2026-10-03 12:30:21-04:00
 
 ---
 
 ## Overall Implementation Progress
 
 ```
-[███████████████████████████████████████░░░░░░░░░░░] 77.8% Complete
+[██████████████████████████████████████████░░░░░░░░] 83.3% Complete
 ```
-**Current Status: 77.8% Implemented (14 of 18 sub-tasks completed)**
+**Current Status: 83.3% Implemented (15 of 18 sub-tasks completed)**
 
 ---
 
@@ -53,7 +53,7 @@
 | **F12** | **QSS Theming** | Text input (`QLineEdit` search bar & focus rings) | `src/main.cpp` | `Done` | 100% | 2026-10-02 12:00:18-04:00 |
 | **F13** | **QSS Theming** | Notepad tab editor (`QTextEdit` subpixel contrast and font readability) | `src/main.cpp`, `padwidget.cpp` | `Done` | 100% | 2026-10-02 12:00:42-04:00 |
 | **F14** | **QSS Theming** | Sleek minimal scrollbars (`QScrollBar:vertical` & `horizontal`) | `src/main.cpp` | `Done` | 100% | 2026-10-02 12:01:14-04:00 |
-| **F15** | **Icon Modernization** | Multi-resolution iconset generation from `images/icon.png` via `sips` | `kleopatra.rb` (`install`) | `Not Implemented` | 0% | 2026-10-02 |
+| **F15** | **Icon Modernization** | Multi-resolution iconset generation from `images/icon.png` via `sips` | `kleopatra.rb` (`install`) | `Done` | 100% | 2026-10-03 12:30:21-04:00 |
 | **F16** | **Icon Modernization** | Apple `.icns` compilation via `iconutil` and bundle installation | `kleopatra.rb` (`install`) | `Not Implemented` | 0% | 2026-10-02 |
 | **F17** | **Icon Modernization** | In-app window & dialog icon injection (`app.setWindowIcon`) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
 | **F18** | **Build & Upstream** | Full source compilation verification, runtime test, and PR preparation | `kleopatra.rb`, Git | `Not Implemented` | 0% | 2026-10-02 |
@@ -119,6 +119,8 @@
 
 | 14 | 2026-10-03 12:29:25-04:00 | `f502ec8` | feat(ui) | reveal vibrancy through the canvas | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F3 |
 
+| 15 | 2026-10-03 12:30:21-04:00 | `318f526` | feat(icon) | generate complete macOS iconsets | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F15 |
+
 ---
 
 ## Change Log & Notes
@@ -152,3 +154,5 @@
 - **2026-10-03 12:28:32-04:00**: 38bf577 completed F2. Patch the exact MainWindow constructor in kleopatra.rb to set WA_TranslucentBackground on macOS before showing the window and disable central-widget autofill. This allows Qt 5 alpha rendering to reveal the native Cocoa material while retaining normal title-bar controls. The Cocoa harness executes the injected constructor body and checks both attributes; all three focused tests pass.
 
 - **2026-10-03 12:29:25-04:00**: f502ec8 completed F3. Replace the opaque QMainWindow QSS fill with rgba(35, 38, 41, 224) using Qt integer alpha. Preserve high-contrast menus and editors while allowing the macOS native background material to show through the base canvas. The Qt 5 widget rendering harness verifies the polished window alpha and all existing controls; focused tests pass.
+
+- **2026-10-03 12:30:21-04:00**: 318f526 completed F15. Generate all ten standard and Retina iconset PNGs from the tap icon using macOS sips. Fit the non-square source within a 1024-pixel square canvas before scaling to preserve its aspect ratio. Stage the iconset in Homebrew buildpath before CMake; inspect every generated PNG dimension in the focused test. All four runtime and packaging tests pass.
