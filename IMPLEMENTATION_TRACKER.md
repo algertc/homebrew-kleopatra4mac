@@ -5,7 +5,7 @@
 **Repository Path:** `/opt/homebrew/Library/Taps/kayyo321/homebrew-kleopatra4mac`
 **Working Branch:** `feature/modernize-ui-plasma-transparency`
 **Tracker Initialized:** 2026-10-02 11:45:00-04:00
-**Last Updated:** 2026-10-03 12:55:56-04:00
+**Last Updated:** 2026-10-03 12:59:47-04:00
 
 ---
 
@@ -56,7 +56,7 @@
 | **F15** | **Icon Modernization** | Multi-resolution iconset generation from `images/icon.png` via `sips` | `kleopatra.rb` (`install`) | `Done` | 100% | 2026-10-03 12:30:21-04:00 |
 | **F16** | **Icon Modernization** | Apple `.icns` compilation via `iconutil` and bundle installation | `kleopatra.rb` (`install`) | `Done` | 100% | 2026-10-03 12:31:24-04:00 |
 | **F17** | **Icon Modernization** | In-app window & dialog icon injection (`app.setWindowIcon`) | `src/main.cpp` | `Done` | 100% | 2026-10-03 12:31:46-04:00 |
-| **F18** | **Build & Upstream** | Full source compilation verification, runtime test, and PR preparation | `kleopatra.rb`, Git | `In Development (25%)` | 25% | 2026-10-03 12:34:49-04:00 |
+| **F18** | **Build & Upstream** | Full source compilation verification, runtime test, and PR preparation | `kleopatra.rb`, Git | `In Development (60%)` | 60% | 2026-10-03 12:34:49-04:00 |
 
 ---
 
@@ -127,6 +127,8 @@
 
 | 18 | 2026-10-03 12:55:56-04:00 | `84b7664` | fix(build) | support current Homebrew dependencies | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F18 |
 
+| 19 | 2026-10-03 12:56:25-04:00 | `2063487` | fix(ui) | place vibrancy beneath Qt content | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F1 |
+
 ---
 
 ## Change Log & Notes
@@ -172,3 +174,7 @@
 - **2026-10-03 12:38:03-04:00**: 84b7664 advanced F18. Bundle checksum-pinned libassuan API 2 privately in the Kleopatra keg for pinned GPGME 1.17, leaving Homebrew GnuPG on its own API 3 dependency. Pass C++17 explicitly at GPGME configure time instead of requiring a generated compiler flag that Clang no longer emits. Set CMake 4 minimum policy compatibility, Qt major version 5 and the private prefix search path for KF5. The focused UI/Cocoa/icon suite passes; full source compilation is still in progress.
 
 - **2026-10-03 12:55:56-04:00**: 84b7664 advances F18 with matching private ECM modules, unified GPGME bindings, disabled agent-dependent install fixtures, stable Phonon, a revision bump and C++20 copy-on-write compatibility. All KDE dependencies compiled; the next build verifies the two main-app shared_ptr fixes. Seven focused tests pass.
+
+- **2026-10-03 12:56:25-04:00**: 2063487 completed F1. Place the Cocoa material as a sibling below Qt native content rather than a child overlay, because ordinary QWidget controls share the native content view. Use the content frame and autoresizing mask to cover the canvas without obscuring rendered controls. Strengthen the Cocoa test to inspect sibling ordering, material, resize geometry and duplicate prevention; all seven focused tests pass.
+
+- **2026-10-03 12:59:47-04:00**: Seven focused tests pass, including fail-fast native-window/CMake patch anchors and the corrected sibling placement beneath Qt content. The final source build includes all compatibility fixes; an isolated runtime keyring is prepared for import and UI verification. Intel bridge syntax compilation also passed against the installed macOS SDK.

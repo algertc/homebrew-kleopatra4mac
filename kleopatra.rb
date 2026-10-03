@@ -6,8 +6,8 @@ class Kleopatra < Formula
   homepage "https://invent.kde.org/pim/kleopatra"
   url "https://github.com/KDE/kleopatra/archive/refs/tags/v22.07.80.tar.gz"
   sha256 "92642a820fe8ca17b8ba29f8c8e72023765a075422fb37eef82d85bf67729a25"
-  revision 1
   license all_of: ["GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
+  revision 1
   keg_only "not linked to prevent conflicts with any gpgme or kde libs"
 
   depends_on "boost" => :build
@@ -19,10 +19,12 @@ class Kleopatra < Formula
 
   depends_on "dbus"
   depends_on "docbook-xsl"
+  depends_on "gettext"
   depends_on "gnupg"
   depends_on "libassuan"
   depends_on "libgpg-error"
   depends_on "qt@5"
+  depends_on "xz"
   depends_on "zstd"
 
   uses_from_macos "zip"
@@ -173,7 +175,7 @@ class Kleopatra < Formula
       -DCMAKE_POLICY_VERSION_MINIMUM=3.5
       -DQT_MAJOR_VERSION=5
       -DCMAKE_PREFIX_PATH=#{prefix};#{Formula["qt@5"].opt_prefix}
-      -DECM_DIR=#{prefix}/share/ECM/cmake
+      -DECM_DIR=#{share}/ECM/cmake
     ]
 
     resource("extra-cmake-modules").stage do
@@ -599,8 +601,24 @@ class Kleopatra < Formula
   end
 
   test do
+    ENV["QT_QPA_PLATFORM"] = "offscreen"
+    resources = prefix/"Applications/KDE/kleopatra.app/Contents/Resources"
+    assert_equal "icns", File.binread(resources/"kleopatra.icns", 4)
+    assert_path_exists resources/"kleopatra.png"
     k = "#{prefix}/Applications/KDE/kleopatra.app/Contents/MacOS/kleopatra"
-    system k, "--help"
+    (testpath/"session.conf").write <<~XML
+      <busconfig>
+        <type>session</type>
+        <listen>unix:tmpdir=#{testpath}</listen>
+        <auth>EXTERNAL</auth>
+        <policy context="default">
+          <allow send_destination="*" eavesdrop="true"/>
+          <allow eavesdrop="true"/>
+          <allow own="*"/>
+        </policy>
+      </busconfig>
+    XML
+    system formula_opt_bin("dbus")/"dbus-run-session", "--config-file=#{testpath}/session.conf", "--", k, "--help"
   end
 
   def caveats
