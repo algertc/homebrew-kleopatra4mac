@@ -399,7 +399,8 @@ class Kleopatra < Formula
       {
           NSView *view = reinterpret_cast<NSView *>(windowId);
           NSWindow *window = view.window;
-          if (!window) {
+          NSView *container = view.superview;
+          if (!window || !container) {
               return;
           }
           window.opaque = NO;
@@ -408,13 +409,15 @@ class Kleopatra < Formula
           if (objc_getAssociatedObject(view, &effectKey)) {
               return;
           }
-          NSVisualEffectView *effect = [[NSVisualEffectView alloc] initWithFrame:view.bounds];
+          NSVisualEffectView *effect = [[NSVisualEffectView alloc] initWithFrame:view.frame];
           effect.material = NSVisualEffectMaterialUnderWindowBackground;
           effect.blendingMode = NSVisualEffectBlendingModeBehindWindow;
           effect.state = NSVisualEffectStateFollowsWindowActiveState;
           effect.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
           effect.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-          [view addSubview:effect positioned:NSWindowBelow relativeTo:nil];
+          // QWidget children share Qt's native view, so the material must be a
+          // sibling below that view rather than an overlay inside it.
+          [container addSubview:effect positioned:NSWindowBelow relativeTo:view];
           objc_setAssociatedObject(view, &effectKey, effect, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
           [effect release];
       }
@@ -441,7 +444,8 @@ class Kleopatra < Formula
           applyMacVibrancy(winId());
       #endif
     CPP
-    inreplace "src/CMakeLists.txt", "add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_uiserver_SRCS})", <<~CMAKE.chomp
+    inreplace "src/CMakeLists.txt",
+              "add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_uiserver_SRCS})", <<~CMAKE.chomp
       if (APPLE)
         enable_language(OBJCXX)
         list(APPEND _kleopatra_SRCS macvibrancy.mm)

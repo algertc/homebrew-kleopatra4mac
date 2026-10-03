@@ -163,13 +163,14 @@ class UiModernizationTest < Minitest::Test
           app.processEvents();
           NSView *view = reinterpret_cast<NSView *>(window.winId());
           int effects = 0;
-          for (NSView *child in view.subviews) {
+          for (NSView *child in view.superview.subviews) {
               if ([child isKindOfClass:NSVisualEffectView.class]) {
                   ++effects;
                   NSVisualEffectView *effect = static_cast<NSVisualEffectView *>(child);
                   if (effect.material != NSVisualEffectMaterialUnderWindowBackground
                       || effect.blendingMode != NSVisualEffectBlendingModeBehindWindow
-                      || !NSEqualRects(effect.frame, view.bounds)) { return 1; }
+                      || !NSEqualRects(effect.frame, view.frame)
+                      || [view.superview.subviews indexOfObject:effect] >= [view.superview.subviews indexOfObject:view]) { return 1; }
               }
           }
           return effects == 1 && !view.window.opaque ? 0 : 2;
