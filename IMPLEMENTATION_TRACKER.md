@@ -5,16 +5,16 @@
 **Repository Path:** `/opt/homebrew/Library/Taps/kayyo321/homebrew-kleopatra4mac`
 **Working Branch:** `feature/modernize-ui-plasma-transparency`
 **Tracker Initialized:** 2026-10-02 11:45:00-04:00
-**Last Updated:** 2026-10-03 12:27:39-04:00
+**Last Updated:** 2026-10-03 12:28:32-04:00
 
 ---
 
 ## Overall Implementation Progress
 
 ```
-[█████████████████████████████████░░░░░░░░░░░░░░░░░] 66.7% Complete
+[████████████████████████████████████░░░░░░░░░░░░░░] 72.2% Complete
 ```
-**Current Status: 66.7% Implemented (12 of 18 sub-tasks completed)**
+**Current Status: 72.2% Implemented (13 of 18 sub-tasks completed)**
 
 ---
 
@@ -40,7 +40,7 @@
 | ID | Component / Area | Specific Feature / Sub-Task | Target File(s) in Build | Status | Progress | Date Updated |
 | :---: | :--- | :--- | :--- | :---: | :---: | :---: |
 | **F1** | **Window Vibrancy** | Objective-C runtime bridge (`applyMacVibrancy` with `NSVisualEffectView` under-window blur) | `src/mainwindow.cpp` | `Done` | 100% | 2026-10-03 12:27:39-04:00 |
-| **F2** | **Window Vibrancy** | Window attribute `Qt::WA_TranslucentBackground` injection in `MainWindow` constructor | `src/mainwindow.cpp` | `Not Implemented` | 0% | 2026-10-02 |
+| **F2** | **Window Vibrancy** | Window attribute `Qt::WA_TranslucentBackground` injection in `MainWindow` constructor | `src/mainwindow.cpp` | `Done` | 100% | 2026-10-03 12:28:32-04:00 |
 | **F3** | **Window Vibrancy** | Translucent base canvas styling (`QMainWindow { background-color: rgba(...) }`) | `src/main.cpp` | `Not Implemented` | 0% | 2026-10-02 |
 | **F4** | **Plasma Base Style** | Force cross-platform `Fusion` style via `QApplication::setStyle` | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:53:04-04:00 |
 | **F5** | **Breeze Palette** | Authentic KDE Breeze Dark `QPalette` (Charcoal `#232629`, Cyan `#3daee9`, Text `#eff0f1`) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:55:40-04:00 |
@@ -115,6 +115,8 @@
 
 | 12 | 2026-10-03 12:27:39-04:00 | `18bc8c2` | feat(ui) | add native window vibrancy | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F1 |
 
+| 13 | 2026-10-03 12:28:32-04:00 | `38bf577` | feat(ui) | enable translucent main windows | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | F2 |
+
 ---
 
 ## Change Log & Notes
@@ -144,3 +146,5 @@
 - **2026-10-02 12:01:14-04:00**: 1012895 completed F14. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
 
 - **2026-10-03 12:27:39-04:00**: 18bc8c2 completed F1. Generate an Objective-C++ Cocoa bridge in kleopatra.rb and add it to the macOS CMake target with explicit AppKit linkage. Use SDK material enums and native struct ABI for Intel and Apple Silicon. Apply the bridge after KXmlGuiWindow::showEvent, retain one effect per native view, follow window activity and resize automatically. The Qt 5 Cocoa lifecycle harness passes repeated show/hide and resize checks. Homebrew checks retain existing formula type/style errors.
+
+- **2026-10-03 12:28:32-04:00**: 38bf577 completed F2. Patch the exact MainWindow constructor in kleopatra.rb to set WA_TranslucentBackground on macOS before showing the window and disable central-widget autofill. This allows Qt 5 alpha rendering to reveal the native Cocoa material while retaining normal title-bar controls. The Cocoa harness executes the injected constructor body and checks both attributes; all three focused tests pass.

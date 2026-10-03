@@ -466,7 +466,7 @@ class Kleopatra < Formula
       app.setPalette(breezeDark);
 
       app.setStyleSheet(QStringLiteral(R"QSS(
-          QMainWindow { background-color: #232629; }
+          QMainWindow { background-color: rgba(35, 38, 41, 224); }
           QMenuBar {
               background-color: #232629;
               color: #eff0f1;

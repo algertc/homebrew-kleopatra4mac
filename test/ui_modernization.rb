@@ -92,6 +92,7 @@ class UiModernizationTest < Minitest::Test
           window.show();
           app.processEvents();
           window.ensurePolished();
+          if (window.palette().color(QPalette::Window).alpha() != 224) { return 6; }
           if (tree->verticalScrollBar()->width() != 10) { return 5; }
           for (int index = 0; index < tabs->count(); ++index) {
               tabs->setCurrentIndex(index);
