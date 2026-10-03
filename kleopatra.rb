@@ -337,6 +337,7 @@ class Kleopatra < Formula
       s.gsub!(/QStringLiteral\(\"Monospace\"\)/, "QFontDatabase::systemFont(QFontDatabase::FixedFont)")
     end
 
+    modernize_window
     modernize_ui
 
     system "cmake", ".", *args
@@ -357,6 +358,63 @@ class Kleopatra < Formula
 
     # this fixes loading of libdbus in runtime from qt on apple m1
     system "install_name_tool", "-add_rpath", "#{HOMEBREW_PREFIX}/lib", kleopatra
+  end
+
+  def modernize_window
+    # Objective-C++ uses the Cocoa SDK's enum values and structure-return ABI on
+    # both Intel and Apple Silicon, without objc_msgSend casts in Qt's C++ files.
+    Pathname("src/macvibrancy.mm").write <<~CPP
+      #import <AppKit/AppKit.h>
+      #import <objc/runtime.h>
+      #include <QtGui/qwindowdefs.h>
+
+      void applyMacVibrancy(WId windowId)
+      {
+          NSView *view = reinterpret_cast<NSView *>(windowId);
+          NSWindow *window = view.window;
+          if (!window) {
+              return;
+          }
+          window.opaque = NO;
+          window.backgroundColor = NSColor.clearColor;
+          static char effectKey;
+          if (objc_getAssociatedObject(view, &effectKey)) {
+              return;
+          }
+          NSVisualEffectView *effect = [[NSVisualEffectView alloc] initWithFrame:view.bounds];
+          effect.material = NSVisualEffectMaterialUnderWindowBackground;
+          effect.blendingMode = NSVisualEffectBlendingModeBehindWindow;
+          effect.state = NSVisualEffectStateFollowsWindowActiveState;
+          effect.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+          effect.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+          [view addSubview:effect positioned:NSWindowBelow relativeTo:nil];
+          objc_setAssociatedObject(view, &effectKey, effect, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+          [effect release];
+      }
+    CPP
+
+    inreplace "src/mainwindow.cpp", '#include "mainwindow.h"', <<~CPP.chomp
+      #include "mainwindow.h"
+      #ifdef Q_OS_MACOS
+      void applyMacVibrancy(WId windowId);
+      #endif
+    CPP
+    inreplace "src/mainwindow.cpp", "    KXmlGuiWindow::showEvent(e);", <<~CPP.chomp
+          KXmlGuiWindow::showEvent(e);
+      #ifdef Q_OS_MACOS
+          applyMacVibrancy(winId());
+      #endif
+    CPP
+    inreplace "src/CMakeLists.txt", "add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_uiserver_SRCS})", <<~CMAKE.chomp
+      if (APPLE)
+        enable_language(OBJCXX)
+        list(APPEND _kleopatra_SRCS macvibrancy.mm)
+      endif()
+      add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_uiserver_SRCS})
+      if (APPLE)
+        target_link_libraries(kleopatra_bin "-framework AppKit")
+      endif()
+    CMAKE
   end
 
   def modernize_ui

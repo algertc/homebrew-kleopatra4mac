@@ -13,7 +13,9 @@ class UiModernizationTest < Minitest::Test
     @formula = Formulary.factory("kayyo321/kleopatra4mac/kleopatra")
     @directory = Pathname(Dir.mktmpdir("kleopatra-ui-test"))
     (@directory/"src").mkpath
-    FileUtils.cp SOURCE_DIRECTORY/"src/main.cpp", @directory/"src/main.cpp"
+    %w[main.cpp mainwindow.cpp CMakeLists.txt].each do |file|
+      FileUtils.cp SOURCE_DIRECTORY/"src"/file, @directory/"src"/file
+    end
   end
 
   def teardown
@@ -113,6 +115,56 @@ class UiModernizationTest < Minitest::Test
 
       _, errors, status = Open3.capture3({ "QT_QPA_PLATFORM" => "offscreen" }, "./theme")
       assert status.success? && !errors.match?(/Could not parse|Unknown property/), errors
+    end
+  end
+
+  def test_native_vibrancy_lifecycle
+    Dir.chdir(@directory) { @formula.modernize_window }
+    (@directory/"vibrancy.mm").write <<~CPP
+      #import <AppKit/AppKit.h>
+      #include <QApplication>
+      #include <QMainWindow>
+      void applyMacVibrancy(WId windowId);
+      int main(int argc, char **argv) {
+          QApplication app(argc, argv);
+          QMainWindow window;
+          window.setAttribute(Qt::WA_TranslucentBackground);
+          window.resize(640, 480);
+          window.show();
+          app.processEvents();
+          applyMacVibrancy(window.winId());
+          applyMacVibrancy(window.winId());
+          window.hide();
+          window.show();
+          applyMacVibrancy(window.winId());
+          window.resize(800, 600);
+          app.processEvents();
+          NSView *view = reinterpret_cast<NSView *>(window.winId());
+          int effects = 0;
+          for (NSView *child in view.subviews) {
+              if ([child isKindOfClass:NSVisualEffectView.class]) {
+                  ++effects;
+                  NSVisualEffectView *effect = static_cast<NSVisualEffectView *>(child);
+                  if (effect.material != NSVisualEffectMaterialUnderWindowBackground
+                      || effect.blendingMode != NSVisualEffectBlendingModeBehindWindow
+                      || !NSEqualRects(effect.frame, view.bounds)) { return 1; }
+              }
+          }
+          return effects == 1 && !view.window.opaque ? 0 : 2;
+      }
+    CPP
+    Dir.chdir(@directory) do
+      raise "Cocoa compilation failed" unless system "/usr/bin/clang++", "-std=c++17", "vibrancy.mm",
+                                                     "src/macvibrancy.mm",
+                                                     "-I#{Utils::Path.formula_opt_lib("qt@5")}/QtWidgets.framework/Headers",
+                                                     "-I#{Utils::Path.formula_opt_lib("qt@5")}/QtGui.framework/Headers",
+                                                     "-I#{Utils::Path.formula_opt_lib("qt@5")}/QtCore.framework/Headers",
+                                                     "-F#{Utils::Path.formula_opt_lib("qt@5")}",
+                                                     "-framework", "QtWidgets", "-framework", "QtGui",
+                                                     "-framework", "QtCore", "-framework", "AppKit", "-o", "vibrancy"
+
+      _, errors, status = Open3.capture3({ "QT_QPA_PLATFORM" => "cocoa" }, "./vibrancy")
+      assert status.success?, errors
     end
   end
 
