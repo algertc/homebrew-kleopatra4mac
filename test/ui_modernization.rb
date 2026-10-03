@@ -120,6 +120,9 @@ class UiModernizationTest < Minitest::Test
 
   def test_native_vibrancy_lifecycle
     Dir.chdir(@directory) { @formula.modernize_window }
+    constructor = (@directory/"src/mainwindow.cpp").read.match(
+      /: KXmlGuiWindow\(parent, flags\), d\(new Private\(this\)\)\s*\{(.*?)\}/m,
+    )[1]
     (@directory/"vibrancy.mm").write <<~CPP
       #import <AppKit/AppKit.h>
       #include <QApplication>
@@ -128,7 +131,13 @@ class UiModernizationTest < Minitest::Test
       int main(int argc, char **argv) {
           QApplication app(argc, argv);
           QMainWindow window;
-          window.setAttribute(Qt::WA_TranslucentBackground);
+          auto central = new QWidget(&window);
+          central->setAutoFillBackground(true);
+          window.setCentralWidget(central);
+          auto setAttribute = [&window](Qt::WidgetAttribute attribute, bool value) { window.setAttribute(attribute, value); };
+          auto centralWidget = [&window]() { return window.centralWidget(); };
+          #{constructor}
+          if (!window.testAttribute(Qt::WA_TranslucentBackground) || central->autoFillBackground()) { return 3; }
           window.resize(640, 480);
           window.show();
           app.processEvents();

@@ -399,6 +399,15 @@ class Kleopatra < Formula
       void applyMacVibrancy(WId windowId);
       #endif
     CPP
+    inreplace "src/mainwindow.cpp", ": KXmlGuiWindow(parent, flags), d(new Private(this))\n{}", <<~CPP.chomp
+      : KXmlGuiWindow(parent, flags), d(new Private(this))
+      {
+      #ifdef Q_OS_MACOS
+          setAttribute(Qt::WA_TranslucentBackground, true);
+          centralWidget()->setAutoFillBackground(false);
+      #endif
+      }
+    CPP
     inreplace "src/mainwindow.cpp", "    KXmlGuiWindow::showEvent(e);", <<~CPP.chomp
           KXmlGuiWindow::showEvent(e);
       #ifdef Q_OS_MACOS
