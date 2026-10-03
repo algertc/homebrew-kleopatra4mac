@@ -5,7 +5,7 @@
 **Repository Path:** `/opt/homebrew/Library/Taps/kayyo321/homebrew-kleopatra4mac`
 **Working Branch:** `feature/modernize-ui-plasma-transparency`
 **Tracker Initialized:** 2026-10-02 11:45:00-04:00
-**Last Updated:** 2026-10-03 13:19:59-04:00
+**Last Updated:** 2026-10-03 13:21:41-04:00
 
 ---
 
@@ -78,10 +78,10 @@
 - [x] Inspect Qt plugin diagnostic logs with `QT_DEBUG_PLUGINS=1`.
 - [x] Launch `.app` bundle and verify visual vibrancy blur and Plasma Breeze widgets.
 
-### Phase 4: Git History & Upstream Pull Request (Status: In Progress)
-- [ ] Verify all atomic conventional commits are logged in the tracker.
-- [ ] Push `feature/modernize-ui-plasma-transparency` to `origin`.
-- [ ] Open GitHub Pull Request against `algertc/homebrew-kleopatra4mac:main` with formatted template.
+### Phase 4: Git History & Upstream Pull Request (Status: Complete)
+- [x] Verify all atomic conventional commits are logged in the tracker.
+- [x] Push `feature/modernize-ui-plasma-transparency` to `origin`.
+- [x] Open GitHub Pull Request against `algertc/homebrew-kleopatra4mac:main` with formatted template. [Draft PR #20](https://github.com/algertc/homebrew-kleopatra4mac/pull/20).
 
 ---
 
@@ -130,6 +130,10 @@
 | 19 | 2026-10-03 12:56:25-04:00 | `2063487` | fix(ui) | place vibrancy beneath Qt content | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
 
 | 20 | 2026-10-03 13:19:03-04:00 | `8399cbc` | fix(test) | isolate the installed app smoke test | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
+
+| 21 | 2026-10-03 13:20:56-04:00 | `83e2f1b` | docs(ui) | record verified implementation results | `IMPLEMENTATION_TRACKER.md`, `README.md`, `UI_MODERNIZATION_IMPLEMENTATION_PLAN.md`, `test/README.md` | F18 |
+
+| 22 | 2026-10-03 13:21:41-04:00 | `HEAD` (tracker synchronization) | docs(tracker) | record draft pull request completion | `IMPLEMENTATION_TRACKER.md` | F18 |
 
 ---
 
@@ -184,3 +188,7 @@
 - **2026-10-03 13:19:03-04:00**: 8399cbc completed F18. Run the installed Qt application offscreen with a private Unix D-Bus session so Homebrew sandbox checks do not trigger macOS application-registration failures or depend on launchd. Verify packaged ICNS and PNG resources before startup. Declare gettext and xz runtime dependencies identified by the installed linkage audit, which now passes. Full source compilation, the installed smoke test and seven focused Qt/Cocoa/icon tests pass. Native app startup, Notepad typing, certificate import and exported-public-key fingerprint were checked in an isolated test keyring. Homebrew typecheck/style still report legacy formula issues; online changed core tests pass.
 
 - **2026-10-03 13:19:59-04:00**: F18 verification completed on macOS 26.3.1 / Apple Silicon with Qt 5.15.19, Apple Clang 17 and CMake 4.4.3. Full source installation, installed offscreen/private-D-Bus smoke test, seven focused tests and brew linkage --test pass. AppKit linkage and installed-keg RPATHs resolve; an unused build-directory RPATH remains from upstream CMake. Qt plugin logs show Cocoa and image plugins loading without fatal loader or QSS errors. The reopened native app displays Breeze controls and accepts Notepad text; an isolated public certificate import and export fingerprint match pass. The Cocoa harness confirms material placement beneath Qt content, resizing and effect reuse. Intel bridge syntax compilation passes; Intel runtime and other macOS releases were not tested. Homebrew typecheck/lgtm retain the inherited Cache type-template error; style retains existing formula conventions. Optional KF5 platform-theme, tray and font warnings remain.
+
+- **2026-10-03 13:20:56-04:00**: 83e2f1b completed F18. Document the finished UI roadmap, source installation requirements and repeatable Qt/Cocoa/icon verification. Preserve the original implementation plan with a correction note explaining the ABI-safe Objective-C++ bridge and native effect ordering. Mark all 18 features complete after full compilation and installed-app checks, and record actual tested platforms and outstanding legacy lint/type limitations. Audit tracker file lists against Git history so each implementation commit is traceable. The next step publishes the branch as a draft upstream pull request for review.
+
+- **2026-10-03 13:21:41-04:00**: All implementation commits are logged, the branch is pushed to origin, and draft upstream PR #20 is open for review. The final tracker-only synchronization commit is referenced as HEAD because a tracked file cannot contain its own eventual Git hash. Kleopatra remains open with the isolated verification keyring.
