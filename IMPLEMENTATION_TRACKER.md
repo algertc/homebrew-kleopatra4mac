@@ -1,0 +1,194 @@
+# Implementation Tracker: UI Modernization & Transparency in homebrew-kleopatra4mac
+
+**Reference Document:** [UI_MODERNIZATION_IMPLEMENTATION_PLAN.md](./UI_MODERNIZATION_IMPLEMENTATION_PLAN.md)
+**Project:** `homebrew-kleopatra4mac`
+**Repository Path:** `/opt/homebrew/Library/Taps/kayyo321/homebrew-kleopatra4mac`
+**Working Branch:** `feature/modernize-ui-plasma-transparency`
+**Tracker Initialized:** 2026-10-02 11:45:00-04:00
+**Last Updated:** 2026-10-03 13:21:41-04:00
+
+---
+
+## Overall Implementation Progress
+
+```
+[██████████████████████████████████████████████████] 100.0% Complete
+```
+**Current Status: 100.0% Implemented (18 of 18 sub-tasks completed)**
+
+---
+
+## ⚠️ Mandatory Agent Protocol & Commit Instructions
+
+> ### AGENT DIRECTIVE: Read Carefully Before Executing Code Changes
+> 1. **Commit Every Small Logical Change**: Do not batch unrelated tasks together. Whenever a single sub-task is completed (e.g. injecting the Objective-C vibrancy bridge, configuring `Fusion` and `QPalette`, injecting a section of QSS, or generating `.icns` assets), run `git commit` immediately.
+> 2. **In-Depth Conventional Commit Messages**: Every commit must follow Conventional Commits format (`type(scope): summary`) and include an exhaustive message body:
+>    - **Why** the change was made (architectural rationale).
+>    - **What** code was injected/modified in `kleopatra.rb`.
+>    - **How** it interacts with Qt 5, KF5, or macOS Cocoa runtime.
+> 3. **Synchronize Tracker on Every Commit**:
+>    - Immediately after executing `git commit`, open this tracker document (`IMPLEMENTATION_TRACKER.md`).
+>    - Update the status column in the [Feature Implementation Status Table](#feature-implementation-status-table) (`Not Implemented` ➔ `In Development (x%)` ➔ `Done`).
+>    - Recalculate and update the overall percentage at the top.
+>    - Etch the new commit at the bottom in the [Commit History Tracker](#commit-history-tracker) table with commit hash, date, affected files, and message.
+> 4. **Strict Timestamping**: All updates, status changes, and commit logs MUST include standard ISO timestamps (`YYYY-MM-DD HH:MM:SS-04:00`).
+
+---
+
+## Feature Implementation Status Table
+
+| ID | Component / Area | Specific Feature / Sub-Task | Target File(s) in Build | Status | Progress | Date Updated |
+| :---: | :--- | :--- | :--- | :---: | :---: | :---: |
+| **F1** | **Window Vibrancy** | Objective-C runtime bridge (`applyMacVibrancy` with `NSVisualEffectView` under-window blur) | `src/mainwindow.cpp` | `Done` | 100% | 2026-10-03 12:27:39-04:00 |
+| **F2** | **Window Vibrancy** | Window attribute `Qt::WA_TranslucentBackground` injection in `MainWindow` constructor | `src/mainwindow.cpp` | `Done` | 100% | 2026-10-03 12:28:32-04:00 |
+| **F3** | **Window Vibrancy** | Translucent base canvas styling (`QMainWindow { background-color: rgba(...) }`) | `src/main.cpp` | `Done` | 100% | 2026-10-03 12:29:25-04:00 |
+| **F4** | **Plasma Base Style** | Force cross-platform `Fusion` style via `QApplication::setStyle` | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:53:04-04:00 |
+| **F5** | **Breeze Palette** | Authentic KDE Breeze Dark `QPalette` (Charcoal `#232629`, Cyan `#3daee9`, Text `#eff0f1`) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:55:40-04:00 |
+| **F6** | **QSS Theming** | Menu bar, menus, items, separators, and status bar styling | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:55:57-04:00 |
+| **F7** | **QSS Theming** | Toolbar and tool button styling (padding, borders, hover/pressed state) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:57:38-04:00 |
+| **F8** | **QSS Theming** | Tree view & table view styling (`QTreeView`, `QTableView`, alternate rows, gridlines) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:58:17-04:00 |
+| **F9** | **QSS Theming** | Table header section styling (`QHeaderView::section` cyan bottom accent) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:58:42-04:00 |
+| **F10** | **QSS Theming** | Tab widget & tab bar styling (`QTabWidget`, `QTabBar`, active underline indicator) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:59:06-04:00 |
+| **F11** | **QSS Theming** | Action buttons (`QPushButton` default, hover, pressed, disabled states) | `src/main.cpp` | `Done` | 100% | 2026-10-02 11:59:44-04:00 |
+| **F12** | **QSS Theming** | Text input (`QLineEdit` search bar & focus rings) | `src/main.cpp` | `Done` | 100% | 2026-10-02 12:00:18-04:00 |
+| **F13** | **QSS Theming** | Notepad tab editor (`QTextEdit` subpixel contrast and font readability) | `src/main.cpp`, `padwidget.cpp` | `Done` | 100% | 2026-10-02 12:00:42-04:00 |
+| **F14** | **QSS Theming** | Sleek minimal scrollbars (`QScrollBar:vertical` & `horizontal`) | `src/main.cpp` | `Done` | 100% | 2026-10-02 12:01:14-04:00 |
+| **F15** | **Icon Modernization** | Multi-resolution iconset generation from `images/icon.png` via `sips` | `kleopatra.rb` (`install`) | `Done` | 100% | 2026-10-03 12:30:21-04:00 |
+| **F16** | **Icon Modernization** | Apple `.icns` compilation via `iconutil` and bundle installation | `kleopatra.rb` (`install`) | `Done` | 100% | 2026-10-03 12:31:24-04:00 |
+| **F17** | **Icon Modernization** | In-app window & dialog icon injection (`app.setWindowIcon`) | `src/main.cpp` | `Done` | 100% | 2026-10-03 12:31:46-04:00 |
+| **F18** | **Build & Upstream** | Full source compilation verification, runtime test, and PR preparation | `kleopatra.rb`, Git | `Done` | 100% | 2026-10-03 13:19:59-04:00 |
+
+---
+
+## Implementation Phases & Milestone Tracking
+
+### Phase 1: Preparation & Architecture Setup (Status: Complete)
+- [x] Analyze dependency tree and lifecycle of `kleopatra.rb`. *(Completed 2026-10-02)*
+- [x] Create comprehensive implementation plan (`UI_MODERNIZATION_IMPLEMENTATION_PLAN.md`). *(Completed 2026-10-02)*
+- [x] Establish granular progress tracker with commit protocols. *(Completed 2026-10-02)*
+
+### Phase 2: Core Formula Inreplace Mutations (Status: Complete)
+- [x] Inject native macOS vibrancy bridge and translucent window attributes into `src/mainwindow.cpp`.
+- [x] Inject `Fusion` base style, KDE Breeze Dark `QPalette`, and comprehensive QSS into `src/main.cpp`.
+- [x] Add `.iconset` and `.icns` generation script in `kleopatra.rb` bundle staging.
+
+### Phase 3: Compilation, Linking & Runtime Verification (Status: Complete)
+- [x] Run `brew install --build-from-source kayyo321/kleopatra4mac/kleopatra`.
+- [x] Verify dynamic linkage via `otool -L` and check for missing RPATHs.
+- [x] Inspect Qt plugin diagnostic logs with `QT_DEBUG_PLUGINS=1`.
+- [x] Launch `.app` bundle and verify visual vibrancy blur and Plasma Breeze widgets.
+
+### Phase 4: Git History & Upstream Pull Request (Status: Complete)
+- [x] Verify all atomic conventional commits are logged in the tracker.
+- [x] Push `feature/modernize-ui-plasma-transparency` to `origin`.
+- [x] Open GitHub Pull Request against `algertc/homebrew-kleopatra4mac:main` with formatted template. [Draft PR #20](https://github.com/algertc/homebrew-kleopatra4mac/pull/20).
+
+---
+
+## Commit History Tracker
+
+*All commits made by the agent or engineer during the execution of this task must be recorded below in chronological order.*
+
+| # | Date & Timestamp | Commit Hash | Scope / Type | Summary of Changes | Files Changed | Related Feature IDs |
+| :---: | :---: | :---: | :---: | :--- | :--- | :---: |
+| 1 | 2026-10-02 11:53:04-04:00 | `c8a300b` | feat(ui) | select Fusion rendering on macOS | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 2 | 2026-10-02 11:55:40-04:00 | `6bf3367` | feat(ui) | apply the Breeze Dark palette | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 3 | 2026-10-02 11:55:57-04:00 | `7e9bff9` | feat(ui) | style menus and status messages | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 4 | 2026-10-02 11:57:38-04:00 | `f0b7795` | feat(ui) | style toolbars and action buttons | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 5 | 2026-10-02 11:58:17-04:00 | `44d5b1e` | feat(ui) | theme certificate trees and tables | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 6 | 2026-10-02 11:58:42-04:00 | `fca9765` | feat(ui) | add Breeze certificate headers | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
+
+| 7 | 2026-10-02 11:59:06-04:00 | `384ccbc` | feat(ui) | theme tabs with cyan selection | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
+
+| 8 | 2026-10-02 11:59:44-04:00 | `6cb62e7` | feat(ui) | style push button interaction states | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 9 | 2026-10-02 12:00:18-04:00 | `dc6c710` | feat(ui) | add Breeze search field focus rings | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
+
+| 10 | 2026-10-02 12:00:42-04:00 | `de4b749` | feat(ui) | preserve contrast in Notepad editors | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
+
+| 11 | 2026-10-02 12:01:14-04:00 | `1012895` | feat(ui) | add compact Breeze scrollbars | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 12 | 2026-10-03 12:27:39-04:00 | `18bc8c2` | feat(ui) | add native window vibrancy | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 13 | 2026-10-03 12:28:32-04:00 | `38bf577` | feat(ui) | enable translucent main windows | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 14 | 2026-10-03 12:29:25-04:00 | `f502ec8` | feat(ui) | reveal vibrancy through the canvas | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 15 | 2026-10-03 12:30:21-04:00 | `318f526` | feat(icon) | generate complete macOS iconsets | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 16 | 2026-10-03 12:31:24-04:00 | `6f144cd` | feat(icon) | install native bundle icons | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 17 | 2026-10-03 12:31:46-04:00 | `a634a10` | feat(icon) | use bundle assets in Qt windows | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 18 | 2026-10-03 12:55:56-04:00 | `84b7664` | fix(build) | support current Homebrew dependencies | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 19 | 2026-10-03 12:56:25-04:00 | `2063487` | fix(ui) | place vibrancy beneath Qt content | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`, `test/ui_modernization.rb`
+
+| 20 | 2026-10-03 13:19:03-04:00 | `8399cbc` | fix(test) | isolate the installed app smoke test | `kleopatra.rb`, `test/ui_modernization.rb`, `IMPLEMENTATION_TRACKER.md` | `IMPLEMENTATION_TRACKER.md`, `kleopatra.rb`
+
+| 21 | 2026-10-03 13:20:56-04:00 | `83e2f1b` | docs(ui) | record verified implementation results | `IMPLEMENTATION_TRACKER.md`, `README.md`, `UI_MODERNIZATION_IMPLEMENTATION_PLAN.md`, `test/README.md` | F18 |
+
+| 22 | 2026-10-03 13:21:41-04:00 | `HEAD` (tracker synchronization) | docs(tracker) | record draft pull request completion | `IMPLEMENTATION_TRACKER.md` | F18 |
+
+---
+
+## Change Log & Notes
+
+- **2026-10-02 11:45:00-04:00**: Implementation tracker initialized at 0.0% completion. 18 sub-tasks defined across 4 implementation phases. Ready for active coding.
+
+- **2026-10-02 11:53:04-04:00**: c8a300b completed F4. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 11:55:40-04:00**: 6bf3367 completed F5. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 11:55:57-04:00**: 7e9bff9 completed F6. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 11:57:38-04:00**: f0b7795 completed F7. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 11:58:17-04:00**: 44d5b1e completed F8. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 11:58:42-04:00**: fca9765 completed F9. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 11:59:06-04:00**: 384ccbc completed F10. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 11:59:44-04:00**: 6cb62e7 completed F11. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 12:00:18-04:00**: dc6c710 completed F12. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 12:00:42-04:00**: de4b749 completed F13. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-02 12:01:14-04:00**: 1012895 completed F14. Pinned-source patch and Qt 5 runtime harness passed. Homebrew typecheck/style retain baseline formula errors; online changed tests report no associated core tests.
+
+- **2026-10-03 12:27:39-04:00**: 18bc8c2 completed F1. Generate an Objective-C++ Cocoa bridge in kleopatra.rb and add it to the macOS CMake target with explicit AppKit linkage. Use SDK material enums and native struct ABI for Intel and Apple Silicon. Apply the bridge after KXmlGuiWindow::showEvent, retain one effect per native view, follow window activity and resize automatically. The Qt 5 Cocoa lifecycle harness passes repeated show/hide and resize checks. Homebrew checks retain existing formula type/style errors.
+
+- **2026-10-03 12:28:32-04:00**: 38bf577 completed F2. Patch the exact MainWindow constructor in kleopatra.rb to set WA_TranslucentBackground on macOS before showing the window and disable central-widget autofill. This allows Qt 5 alpha rendering to reveal the native Cocoa material while retaining normal title-bar controls. The Cocoa harness executes the injected constructor body and checks both attributes; all three focused tests pass.
+
+- **2026-10-03 12:29:25-04:00**: f502ec8 completed F3. Replace the opaque QMainWindow QSS fill with rgba(35, 38, 41, 224) using Qt integer alpha. Preserve high-contrast menus and editors while allowing the macOS native background material to show through the base canvas. The Qt 5 widget rendering harness verifies the polished window alpha and all existing controls; focused tests pass.
+
+- **2026-10-03 12:30:21-04:00**: 318f526 completed F15. Generate all ten standard and Retina iconset PNGs from the tap icon using macOS sips. Fit the non-square source within a 1024-pixel square canvas before scaling to preserve its aspect ratio. Stage the iconset in Homebrew buildpath before CMake; inspect every generated PNG dimension in the focused test. All four runtime and packaging tests pass.
+
+- **2026-10-03 12:31:24-04:00**: 6f144cd completed F16. Compile the staged iconset with iconutil and install kleopatra.icns into the app Resources directory after CMake installation. Install the matching PNG for Qt and update CFBundleIconFile through PlistBuddy before post_install archives the bundle. The bundle fixture verifies ICNS magic, PNG presence and plist lookup; five focused tests pass.
+
+- **2026-10-03 12:31:46-04:00**: a634a10 completed F17. Inject QIcon loading after KAboutData registration so KDE initialization cannot replace the application icon. Resolve the PNG relative to applicationDirPath rather than embedding a Cellar or tap path. Extend the Qt 5 harness to move its app bundle before launch and render the application and inherited dialog icons. All five focused tests pass, including relocation and Cocoa lifecycle checks.
+
+- **2026-10-03 12:34:49-04:00**: Phase 2 is complete. Full source installation reached legacy GPGME configuration and failed because current Homebrew libassuan exposes API 3, while pinned GPGME requires API 2. A private checksum-pinned libassuan 2.5.7 resource and CMake 4 compatibility settings are being verified in the next full build.
+
+- **2026-10-03 12:38:03-04:00**: 84b7664 advanced F18. Bundle checksum-pinned libassuan API 2 privately in the Kleopatra keg for pinned GPGME 1.17, leaving Homebrew GnuPG on its own API 3 dependency. Pass C++17 explicitly at GPGME configure time instead of requiring a generated compiler flag that Clang no longer emits. Set CMake 4 minimum policy compatibility, Qt major version 5 and the private prefix search path for KF5. The focused UI/Cocoa/icon suite passes; full source compilation is still in progress.
+
+- **2026-10-03 12:55:56-04:00**: 84b7664 advances F18 with matching private ECM modules, unified GPGME bindings, disabled agent-dependent install fixtures, stable Phonon, a revision bump and C++20 copy-on-write compatibility. All KDE dependencies compiled; the next build verifies the two main-app shared_ptr fixes. Seven focused tests pass.
+
+- **2026-10-03 12:56:25-04:00**: 2063487 completed F1. Place the Cocoa material as a sibling below Qt native content rather than a child overlay, because ordinary QWidget controls share the native content view. Use the content frame and autoresizing mask to cover the canvas without obscuring rendered controls. Strengthen the Cocoa test to inspect sibling ordering, material, resize geometry and duplicate prevention; all seven focused tests pass.
+
+- **2026-10-03 12:59:47-04:00**: Seven focused tests pass, including fail-fast native-window/CMake patch anchors and the corrected sibling placement beneath Qt content. The final source build includes all compatibility fixes; an isolated runtime keyring is prepared for import and UI verification. Intel bridge syntax compilation also passed against the installed macOS SDK.
+
+- **2026-10-03 13:19:03-04:00**: 8399cbc completed F18. Run the installed Qt application offscreen with a private Unix D-Bus session so Homebrew sandbox checks do not trigger macOS application-registration failures or depend on launchd. Verify packaged ICNS and PNG resources before startup. Declare gettext and xz runtime dependencies identified by the installed linkage audit, which now passes. Full source compilation, the installed smoke test and seven focused Qt/Cocoa/icon tests pass. Native app startup, Notepad typing, certificate import and exported-public-key fingerprint were checked in an isolated test keyring. Homebrew typecheck/style still report legacy formula issues; online changed core tests pass.
+
+- **2026-10-03 13:19:59-04:00**: F18 verification completed on macOS 26.3.1 / Apple Silicon with Qt 5.15.19, Apple Clang 17 and CMake 4.4.3. Full source installation, installed offscreen/private-D-Bus smoke test, seven focused tests and brew linkage --test pass. AppKit linkage and installed-keg RPATHs resolve; an unused build-directory RPATH remains from upstream CMake. Qt plugin logs show Cocoa and image plugins loading without fatal loader or QSS errors. The reopened native app displays Breeze controls and accepts Notepad text; an isolated public certificate import and export fingerprint match pass. The Cocoa harness confirms material placement beneath Qt content, resizing and effect reuse. Intel bridge syntax compilation passes; Intel runtime and other macOS releases were not tested. Homebrew typecheck/lgtm retain the inherited Cache type-template error; style retains existing formula conventions. Optional KF5 platform-theme, tray and font warnings remain.
+
+- **2026-10-03 13:20:56-04:00**: 83e2f1b completed F18. Document the finished UI roadmap, source installation requirements and repeatable Qt/Cocoa/icon verification. Preserve the original implementation plan with a correction note explaining the ABI-safe Objective-C++ bridge and native effect ordering. Mark all 18 features complete after full compilation and installed-app checks, and record actual tested platforms and outstanding legacy lint/type limitations. Audit tracker file lists against Git history so each implementation commit is traceable. The next step publishes the branch as a draft upstream pull request for review.
+
+- **2026-10-03 13:21:41-04:00**: All implementation commits are logged, the branch is pushed to origin, and draft upstream PR #20 is open for review. The final tracker-only synchronization commit is referenced as HEAD because a tracked file cannot contain its own eventual Git hash. Kleopatra remains open with the isolated verification keyring.

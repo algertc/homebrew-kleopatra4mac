@@ -92,7 +92,7 @@
   ```
 
 ## Installation
-* ### <strong>Precompiled Binaries (Recommended)</strong>
+* ### <strong>Homebrew Installation</strong>
 
 1. Brew Install
 
@@ -105,10 +105,15 @@
 
 3.  To Rebuild From [*Kleopatra.rb*](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/kleopatra.rb)  in This Repo
 
-	   `` brew install --build-from-source``
+	   ``brew install --build-from-source algertc/kleopatra4mac/kleopatra``
 4.  If  You Decide to Make Changes, You Can Create Your Own New Bottle (**Please Consider Submitting  a  Pull Request!)**
 
 	Bottles are produced by installing a formula with `brew install --build-bottle <formula>` and then bottling it with `brew bottle <formula>`
+
+Source builds apply Fusion with a Breeze Dark palette, native macOS window vibrancy,
+and the modern application icon. The formula builds compatible KF5 and GPGME
+resources within its own keg. New bottles must be generated for this revision;
+the previous precompiled bottles contain the older interface.
 
 ## After Installation
 ### ❗*The Following Section is For ARM/Apple Silicon. Intel Instructions Can Be Found [Here](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/intel_instructions.md)* 
@@ -159,11 +164,11 @@
 - [x] Dark mode
 - [x] Universal Font
 - [ ] Fix symlink spotlight search ranking
-- [ ] Beautify/Modernize UI
-	- [ ] Mimic [Plasma Styling](https://kde.org/images/screenshots/kleopatra.png)
-	- [ ] Transparency
+- [x] Beautify/Modernize UI
+	- [x] Mimic [Plasma Styling](https://kde.org/images/screenshots/kleopatra.png)
+	- [x] Transparency
 - [ ] Fix Unintended Pagination ([Issue #1](https://github.com/algertc/homebrew-kleopatra4mac/issues/1))
-- [ ] Exclude Default Icon from KDE's "kiconthemes" and Point to:  [Modernized Application Icon](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/images/Icon.svg)
+- [x] Exclude Default Icon from KDE's "kiconthemes" and Point to:  [Modernized Application Icon](https://github.com/algertc/homebrew-kleopatra4mac/blob/main/images/Icon.svg)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

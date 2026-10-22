@@ -7,13 +7,8 @@ class Kleopatra < Formula
   url "https://github.com/KDE/kleopatra/archive/refs/tags/v22.07.80.tar.gz"
   sha256 "92642a820fe8ca17b8ba29f8c8e72023765a075422fb37eef82d85bf67729a25"
   license all_of: ["GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
+  revision 1
   keg_only "not linked to prevent conflicts with any gpgme or kde libs"
-
-  bottle do
-    root_url "https://github.com/algertc/homebrew-kleopatra4mac/releases/download/latest"
-    sha256 monterey:       "5a3a4892a6ba475bd7e759dc08b4537182964b0fe650545c383aba921ad12803"
-    sha256 arm64_monterey: "b3a7b265427c680b16bf1dacc03ebf6b4c5c3a7d96d5fd13b067cc0b50946467"
-  end
 
   depends_on "boost" => :build
   depends_on "cmake" => :build
@@ -24,23 +19,31 @@ class Kleopatra < Formula
 
   depends_on "dbus"
   depends_on "docbook-xsl"
+  depends_on "gettext"
   depends_on "gnupg"
   depends_on "libassuan"
   depends_on "libgpg-error"
   depends_on "qt@5"
+  depends_on "xz"
   depends_on "zstd"
 
   uses_from_macos "zip"
 
-  # qgpgme, gpgmepp
+  resource "extra-cmake-modules" do
+    url "https://github.com/KDE/extra-cmake-modules/archive/refs/tags/v5.96.0.tar.gz"
+    sha256 "df438ac68dfed744c8f0b27dd0e0f4a2df0cf0050c99d4b41a060366fd1e6087"
+  end
+
+  # GPGME 1.17 requires libassuan API 2; Homebrew's libassuan uses API 3.
+  resource "libassuan" do
+    url "https://www.gnupg.org/ftp/gcrypt/libassuan/libassuan-2.5.7.tar.bz2"
+    sha256 "0103081ffc27838a2e50479153ca105e873d3d65d8a9593282e9c94c7e6afb76"
+  end
+
+  # GPGME, GpgME++ and QGpgME
   resource "gpgme" do
     url "https://www.gnupg.org/ftp/gcrypt/gpgme/gpgme-1.17.1.tar.bz2"
     sha256 "711eabf5dd661b9b04be9edc9ace2a7bc031f6bd9d37a768d02d0efdef108f5f"
-  end
-
-  resource "gpgmepp" do
-    url "https://github.com/KDE/gpgmepp/archive/refs/tags/v16.08.3.tar.gz"
-    sha256 "b988830a88448703128bc2bd2830e8aad2732b3ad45b6f26360b8da358cd9a96"
   end
 
   # knotifications depends on it
@@ -168,31 +171,35 @@ class Kleopatra < Formula
   end
 
   def install
-    args = std_cmake_args
+    args = std_cmake_args + %W[
+      -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+      -DQT_MAJOR_VERSION=5
+      -DCMAKE_PREFIX_PATH=#{prefix};#{Formula["qt@5"].opt_prefix}
+      -DECM_DIR=#{share}/ECM/cmake
+    ]
 
-    # qgpgme, gpgmepp
+    resource("extra-cmake-modules").stage do
+      system "cmake", ".", *args
+      system "make", "install"
+    end
+
+    resource("libassuan").stage do
+      system "./configure", "--prefix=#{prefix}"
+      system "make", "install"
+    end
+
+    # GPGME, GpgME++ and QGpgME
     resource("gpgme").stage do
-      system "./configure --prefix=#{prefix}"
-
-      # Not sure if all ramining folders need this flag
-      inreplace "lang/qt/src/Makefile" do |s|
-        s.gsub!(/\-std=c\+\+11/, "-std=c++17")
-      end
-      inreplace "lang/qt/tests/Makefile" do |s|
-        s.gsub!(/\-std=c\+\+11/, "-std=c++17")
-      end
+      system "./configure", "--prefix=#{prefix}", "--with-libassuan-prefix=#{prefix}",
+             "CXXFLAGS=#{ENV["CXXFLAGS"]} -std=c++17",
+             "--disable-gpg-test", "--disable-gpgsm-test", "--disable-g13-test"
 
       system "make", "install"
     end
 
-    resource("gpgmepp").stage do
-      system "cmake", ".", *args
-      system "make", "install", "prefix=#{prefix}"
-    end
-
     # KF5 depends on it
     resource("phonon").stage do
-      system "cmake", ".", *args
+      system "cmake", ".", *args, "-DPHONON_BUILD_EXPERIMENTAL=OFF"
 
       # ensure application is installed to the prefix in Cellar
       inreplace "settings/cmake_install.cmake" do |s|
@@ -319,11 +326,6 @@ class Kleopatra < Formula
     end
     # end of KF5 libs
 
-    # hide away gpgme++ from kf5, we we need gpgme files include/gpgme++
-    chdir "#{prefix}/include/KF5" do
-      system "mv", "gpgme++", "gpgme++.not.used"
-    end
-
     resource("libkleo").stage do
       system "cmake", ".", *args
       system "make", "install", "prefix=#{prefix}"
@@ -337,6 +339,13 @@ class Kleopatra < Formula
       s.gsub!(/QStringLiteral\(\"Monospace\"\)/, "QFontDatabase::systemFont(QFontDatabase::FixedFont)")
     end
 
+    # shared_ptr::unique was removed in C++20; preserve copy-on-write detachment.
+    inreplace %w[src/crypto/sender.cpp src/crypto/recipient.cpp], "!d.unique()", "d.use_count() != 1"
+
+    iconset = create_iconset(buildpath)
+    modernize_window
+    modernize_ui
+
     system "cmake", ".", *args
 
     # ensure application is installed to the prefix in Cellar
@@ -349,6 +358,7 @@ class Kleopatra < Formula
     end
 
     system "make", "install"
+    install_modern_icon(iconset, prefix/"Applications/KDE/kleopatra.app")
 
     kleopatra = "#{prefix}/Applications/KDE/kleopatra.app/Contents/MacOS/kleopatra"
     system "install_name_tool", "-add_rpath", "#{prefix}/lib", kleopatra
@@ -357,9 +367,258 @@ class Kleopatra < Formula
     system "install_name_tool", "-add_rpath", "#{HOMEBREW_PREFIX}/lib", kleopatra
   end
 
+  def create_iconset(directory)
+    iconset = directory/"kleopatra.iconset"
+    iconset.mkpath
+    square = directory/"kleopatra-icon.png"
+    system "/usr/bin/sips", "--resampleHeightWidthMax", "1024", Pathname(__dir__)/"images/icon.png", "--out", square
+    system "/usr/bin/sips", "--padToHeightWidth", "1024", "1024", square
+    [16, 32, 128, 256, 512].each do |size|
+      system "/usr/bin/sips", "-z", size.to_s, size.to_s, square, "--out", iconset/"icon_#{size}x#{size}.png"
+      system "/usr/bin/sips", "-z", (size * 2).to_s, (size * 2).to_s, square,
+             "--out", iconset/"icon_#{size}x#{size}@2x.png"
+    end
+    iconset
+  end
+
+  def install_modern_icon(iconset, bundle)
+    resources = bundle/"Contents/Resources"
+    resources.mkpath
+    system "/usr/bin/iconutil", "-c", "icns", "-o", resources/"kleopatra.icns", iconset
+    resources.install iconset.parent/"kleopatra-icon.png" => "kleopatra.png"
+    system "/usr/libexec/PlistBuddy", "-c", "Set :CFBundleIconFile kleopatra.icns", bundle/"Contents/Info.plist"
+  end
+
+  def modernize_window
+    # Objective-C++ uses the Cocoa SDK's enum values and structure-return ABI on
+    # both Intel and Apple Silicon, without objc_msgSend casts in Qt's C++ files.
+    Pathname("src/macvibrancy.mm").write <<~CPP
+      #import <AppKit/AppKit.h>
+      #import <objc/runtime.h>
+      #include <QtGui/qwindowdefs.h>
+
+      void applyMacVibrancy(WId windowId)
+      {
+          NSView *view = reinterpret_cast<NSView *>(windowId);
+          NSWindow *window = view.window;
+          NSView *container = view.superview;
+          if (!window || !container) {
+              return;
+          }
+          window.opaque = NO;
+          window.backgroundColor = NSColor.clearColor;
+          static char effectKey;
+          if (objc_getAssociatedObject(view, &effectKey)) {
+              return;
+          }
+          NSVisualEffectView *effect = [[NSVisualEffectView alloc] initWithFrame:view.frame];
+          effect.material = NSVisualEffectMaterialUnderWindowBackground;
+          effect.blendingMode = NSVisualEffectBlendingModeBehindWindow;
+          effect.state = NSVisualEffectStateFollowsWindowActiveState;
+          effect.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+          effect.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+          // QWidget children share Qt's native view, so the material must be a
+          // sibling below that view rather than an overlay inside it.
+          [container addSubview:effect positioned:NSWindowBelow relativeTo:view];
+          objc_setAssociatedObject(view, &effectKey, effect, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+          [effect release];
+      }
+    CPP
+
+    inreplace "src/mainwindow.cpp", '#include "mainwindow.h"', <<~CPP.chomp
+      #include "mainwindow.h"
+      #ifdef Q_OS_MACOS
+      void applyMacVibrancy(WId windowId);
+      #endif
+    CPP
+    inreplace "src/mainwindow.cpp", ": KXmlGuiWindow(parent, flags), d(new Private(this))\n{}", <<~CPP.chomp
+      : KXmlGuiWindow(parent, flags), d(new Private(this))
+      {
+      #ifdef Q_OS_MACOS
+          setAttribute(Qt::WA_TranslucentBackground, true);
+          centralWidget()->setAutoFillBackground(false);
+      #endif
+      }
+    CPP
+    inreplace "src/mainwindow.cpp", "    KXmlGuiWindow::showEvent(e);", <<~CPP.chomp
+          KXmlGuiWindow::showEvent(e);
+      #ifdef Q_OS_MACOS
+          applyMacVibrancy(winId());
+      #endif
+    CPP
+    inreplace "src/CMakeLists.txt",
+              "add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_uiserver_SRCS})", <<~CMAKE.chomp
+      if (APPLE)
+        enable_language(OBJCXX)
+        list(APPEND _kleopatra_SRCS macvibrancy.mm)
+      endif()
+      add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_uiserver_SRCS})
+      if (APPLE)
+        target_link_libraries(kleopatra_bin "-framework AppKit")
+      endif()
+    CMAKE
+  end
+
+  def modernize_ui
+    inreplace "src/main.cpp", "#include <QAccessible>", <<~CPP
+      #include <QAccessible>
+      #include <QStyleFactory>
+      #include <QPalette>
+      #include <QColor>
+      #include <QIcon>
+    CPP
+
+    inreplace "src/main.cpp", "KAboutData::setApplicationData(aboutData);", <<~CPP.chomp
+      KAboutData::setApplicationData(aboutData);
+      app.setWindowIcon(QIcon(QCoreApplication::applicationDirPath()
+                             + QStringLiteral("/../Resources/kleopatra.png")));
+    CPP
+
+    inreplace "src/main.cpp", "KleopatraApplication app(argc, argv);", <<~CPP.chomp
+      KleopatraApplication app(argc, argv);
+      app.setStyle(QStyleFactory::create(QStringLiteral("Fusion")));
+
+      QPalette breezeDark = app.palette();
+      breezeDark.setColor(QPalette::Window, QColor(35, 38, 41));
+      breezeDark.setColor(QPalette::WindowText, QColor(239, 240, 241));
+      breezeDark.setColor(QPalette::Base, QColor(27, 30, 32));
+      breezeDark.setColor(QPalette::AlternateBase, QColor(42, 46, 50));
+      breezeDark.setColor(QPalette::ToolTipBase, QColor(35, 38, 41));
+      breezeDark.setColor(QPalette::ToolTipText, QColor(239, 240, 241));
+      breezeDark.setColor(QPalette::Text, QColor(239, 240, 241));
+      breezeDark.setColor(QPalette::Button, QColor(49, 54, 59));
+      breezeDark.setColor(QPalette::ButtonText, QColor(239, 240, 241));
+      breezeDark.setColor(QPalette::BrightText, QColor(255, 255, 255));
+      breezeDark.setColor(QPalette::Link, QColor(61, 174, 233));
+      breezeDark.setColor(QPalette::LinkVisited, QColor(155, 89, 182));
+      breezeDark.setColor(QPalette::Highlight, QColor(61, 174, 233));
+      breezeDark.setColor(QPalette::HighlightedText, QColor(255, 255, 255));
+      breezeDark.setColor(QPalette::Light, QColor(71, 77, 83));
+      breezeDark.setColor(QPalette::Midlight, QColor(59, 66, 73));
+      breezeDark.setColor(QPalette::Mid, QColor(49, 54, 59));
+      breezeDark.setColor(QPalette::Dark, QColor(27, 30, 32));
+      breezeDark.setColor(QPalette::Shadow, QColor(20, 23, 25));
+      breezeDark.setColor(QPalette::Disabled, QPalette::Text, QColor(122, 127, 131));
+      breezeDark.setColor(QPalette::Disabled, QPalette::WindowText, QColor(122, 127, 131));
+      breezeDark.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(122, 127, 131));
+      breezeDark.setColor(QPalette::Disabled, QPalette::Highlight, QColor(70, 75, 80));
+      breezeDark.setColor(QPalette::Disabled, QPalette::HighlightedText, QColor(122, 127, 131));
+      app.setPalette(breezeDark);
+
+      app.setStyleSheet(QStringLiteral(R"QSS(
+          QMainWindow { background-color: rgba(35, 38, 41, 224); }
+          QMenuBar {
+              background-color: #232629;
+              color: #eff0f1;
+              border-bottom: 1px solid #3a3f44;
+              padding: 2px;
+          }
+          QMenuBar::item { background: transparent; padding: 4px 8px; border-radius: 4px; }
+          QMenuBar::item:selected { background-color: #3daee9; color: #ffffff; }
+          QMenuBar::item:disabled { color: #7a7f83; }
+          QMenu {
+              background-color: #232629;
+              color: #eff0f1;
+              border: 1px solid #3a3f44;
+              border-radius: 6px;
+              padding: 4px;
+          }
+          QMenu::item { padding: 6px 24px 6px 12px; border-radius: 4px; }
+          QMenu::item:selected { background-color: #3daee9; color: #ffffff; }
+          QMenu::item:disabled { color: #7a7f83; }
+          QMenu::separator { height: 1px; background-color: #3a3f44; margin: 4px 8px; }
+          QStatusBar { background-color: #232629; color: #a5b0b7; border-top: 1px solid #3a3f44; }
+          QToolTip {
+              background-color: #232629;
+              color: #eff0f1;
+              border: 1px solid #3daee9;
+              padding: 5px 8px;
+              border-radius: 4px;
+          }
+
+          QToolBar { background-color: rgba(35, 38, 41, 217); border-bottom: 1px solid #3a3f44; spacing: 6px; padding: 4px; }
+          QToolButton { background: transparent; color: #eff0f1; border: 1px solid transparent; border-radius: 5px; padding: 6px 10px; }
+          QToolButton:hover { background-color: rgba(61, 174, 233, 46); border-color: #3daee9; }
+          QToolButton:pressed, QToolButton:checked { background-color: rgba(61, 174, 233, 89); border-color: #3daee9; }
+          QToolButton:disabled { background: transparent; color: #7a7f83; border-color: transparent; }
+
+          QTreeView, QTableView {
+              background-color: rgba(27, 30, 32, 209);
+              alternate-background-color: rgba(35, 38, 41, 209);
+              color: #eff0f1;
+              border: 1px solid #3a3f44;
+              border-radius: 6px;
+              gridline-color: #31363b;
+              selection-background-color: #3daee9;
+              selection-color: #ffffff;
+          }
+          QTreeView::item, QTableView::item { padding: 5px; }
+          QTreeView::item:hover:!selected, QTableView::item:hover:!selected { background-color: rgba(61, 174, 233, 38); }
+          QTreeView::item:selected, QTableView::item:selected { background-color: #2980b9; color: #ffffff; }
+          QTreeView:disabled, QTableView:disabled { color: #7a7f83; }
+
+          QHeaderView::section {
+              background-color: #232629;
+              color: #a5b0b7;
+              font-weight: bold;
+              padding: 6px 8px;
+              border: none;
+              border-right: 1px solid #3a3f44;
+              border-bottom: 2px solid #3daee9;
+          }
+          QTableCornerButton::section { background-color: #232629; border: 1px solid #3a3f44; }
+
+          QTabWidget::pane { border: 1px solid #3a3f44; background-color: rgba(35, 38, 41, 230); border-radius: 6px; top: -1px; }
+          QTabBar::tab { background-color: #232629; color: #a5b0b7; padding: 8px 18px; border: 1px solid #3a3f44; border-bottom: none; border-top-left-radius: 6px; border-top-right-radius: 6px; margin-right: 2px; }
+          QTabBar::tab:selected { background-color: rgba(35, 38, 41, 230); color: #3daee9; border-bottom: 2px solid #3daee9; font-weight: bold; }
+          QTabBar::tab:hover:!selected { background-color: #2a2e32; color: #eff0f1; }
+          QTabBar::tab:disabled { color: #7a7f83; }
+
+          QPushButton { background-color: #31363b; color: #eff0f1; border: 1px solid #474d53; border-radius: 5px; padding: 6px 18px; }
+          QPushButton:hover { background-color: #3b4249; border-color: #3daee9; color: #ffffff; }
+          QPushButton:pressed { background-color: #25292c; border-color: #1d74a4; }
+          QPushButton:default, QPushButton:focus { border-color: #3daee9; }
+          QPushButton:disabled { background-color: #232629; color: #7a7f83; border-color: #31363b; }
+
+          QLineEdit { background-color: #1b1e20; color: #eff0f1; border: 1px solid #474d53; border-radius: 5px; padding: 6px 10px; selection-background-color: #3daee9; selection-color: #ffffff; }
+          QLineEdit:focus { border-color: #3daee9; background-color: #232629; }
+          QLineEdit:disabled { color: #7a7f83; }
+
+          QTextEdit, QPlainTextEdit { background-color: #1b1e20; color: #eff0f1; border: 1px solid #3a3f44; border-radius: 6px; padding: 8px; selection-background-color: #3daee9; selection-color: #ffffff; }
+          QTextEdit:focus, QPlainTextEdit:focus { border-color: #3daee9; }
+          QTextEdit:disabled, QPlainTextEdit:disabled { color: #7a7f83; }
+
+          QScrollBar:vertical { background: transparent; width: 10px; margin: 0px; }
+          QScrollBar:horizontal { background: transparent; height: 10px; margin: 0px; }
+          QScrollBar::handle:vertical { background-color: rgba(255, 255, 255, 56); min-height: 24px; border-radius: 5px; }
+          QScrollBar::handle:horizontal { background-color: rgba(255, 255, 255, 56); min-width: 24px; border-radius: 5px; }
+          QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover { background-color: #3daee9; }
+          QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
+          QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
+          QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { background: transparent; }
+      )QSS"));
+    CPP
+  end
+
   test do
+    ENV["QT_QPA_PLATFORM"] = "offscreen"
+    resources = prefix/"Applications/KDE/kleopatra.app/Contents/Resources"
+    assert_equal "icns", File.binread(resources/"kleopatra.icns", 4)
+    assert_path_exists resources/"kleopatra.png"
     k = "#{prefix}/Applications/KDE/kleopatra.app/Contents/MacOS/kleopatra"
-    system k, "--help"
+    (testpath/"session.conf").write <<~XML
+      <busconfig>
+        <type>session</type>
+        <listen>unix:tmpdir=#{testpath}</listen>
+        <auth>EXTERNAL</auth>
+        <policy context="default">
+          <allow send_destination="*" eavesdrop="true"/>
+          <allow eavesdrop="true"/>
+          <allow own="*"/>
+        </policy>
+      </busconfig>
+    XML
+    system formula_opt_bin("dbus")/"dbus-run-session", "--config-file=#{testpath}/session.conf", "--", k, "--help"
   end
 
   def caveats
